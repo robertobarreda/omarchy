@@ -61,6 +61,7 @@ sudo pacman -S --noconfirm --needed \
   mariadb-libs \
   mise \
   mpv \
+  mupdf-tools \
   nautilus \
   noto-fonts \
   noto-fonts-cjk \
