@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Install build tools
-sudo pacman -Sy --needed --noconfirm base-devel
+sudo pacman -S --needed --noconfirm base-devel
 
 # Add fun and color and verbosity to the pacman installer
 if ! grep -q "ILoveCandy" /etc/pacman.conf; then
@@ -32,7 +32,7 @@ if [[ "$(uname -m)" == "x86_64" ]] && [ -z "$DISABLE_CHAOTIC" ]; then
     fi
 
     # Refresh all repos
-    sudo pacman -Sy
+    sudo pacman -Syu
   else
     echo -e "Failed to install Chaotic-AUR, so won't include it in pacman config!"
   fi
