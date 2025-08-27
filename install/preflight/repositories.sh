@@ -37,9 +37,3 @@ if [[ "$(uname -m)" == "x86_64" ]] && [ -z "$DISABLE_CHAOTIC" ]; then
     echo -e "Failed to install Chaotic-AUR, so won't include it in pacman config!"
   fi
 fi
-
-# Allow repository index updates without sudo
-sudo tee /etc/sudoers.d/repositories >/dev/null <<EOF
-$USER ALL=(ALL) NOPASSWD: /usr/bin/pacman -Sy
-EOF
-sudo chmod 440 /etc/sudoers.d/repositories
