@@ -5,6 +5,7 @@ sudo pacman -S --noconfirm --needed \
   1password-cli \
   asdcontrol-git \
   alacritty \
+  asdcontrol-git \
   avahi \
   bash-completion \
   bat \
@@ -77,6 +78,7 @@ sudo pacman -S --noconfirm --needed \
   obs-studio \
   obsidian \
   omarchy-chromium \
+  omarchy-lazyvim \
   pamixer \
   pinta \
   playerctl \
