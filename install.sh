@@ -59,3 +59,4 @@ source $OMARCHY_INSTALL/login/alt-bootloaders.sh
 # Finishing
 source $OMARCHY_INSTALL/post-install.sh
 source $OMARCHY_INSTALL/reboot.sh
+source $OMARCHY_INSTALL/post-install.sh
