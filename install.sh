@@ -3,7 +3,10 @@
 # Set up logging if we're in a chroot install environment
 if [ -n "$OMARCHY_CHROOT_INSTALL" ]; then
   LOG_FILE="/var/log/omarchy-install.log"
-  mkdir -p "$(dirname "$LOG_FILE")"
+
+  # Create the log file with proper permissions
+  sudo touch "$LOG_FILE"
+  sudo chmod 666 "$LOG_FILE"
 
   # Start logging
   echo "=== Omarchy Installation Started: $(date) ===" | tee -a "$LOG_FILE"
