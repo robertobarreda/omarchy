@@ -1,5 +1,12 @@
 #!/bin/bash
 
+# Set up logging if we're in a chroot install environment
+if [ -n "$OMARCHY_CHROOT_INSTALL" ]; then
+  exec > >(tee -a /var/log/omarchy-install.log)
+  exec 2>&1
+  echo "=== Omarchy Installation Started: $(date) ==="
+fi
+
 # Exit immediately if a command exits with a non-zero status
 set -eE
 
