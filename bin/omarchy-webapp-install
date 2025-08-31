@@ -26,7 +26,7 @@ else
   mkdir -p "$ICON_DIR"
   if ! curl -sL -o "$ICON_PATH" "$ICON_URL"; then
     echo "Error: Failed to download icon."
-    return 1
+    exit 1
   fi
 fi
 
