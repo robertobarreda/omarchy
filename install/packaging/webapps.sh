@@ -1,8 +1,7 @@
 #!/bin/bash
 
-# Check if we're in chroot/offline environment
+# Use local files for ISO install
 if [ -n "${OMARCHY_CHROOT_INSTALL:-}" ]; then
-  # In chroot, use local icon files
   ICON_DIR="$HOME/.local/share/applications/icons"
 
   omarchy-webapp-install "HEY" https://app.hey.com "$ICON_DIR/HEY.png"
@@ -34,4 +33,3 @@ else
   omarchy-webapp-install "Discord" https://discord.com/channels/@me https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/discord.png
   omarchy-webapp-install "Zoom" https://app.zoom.us/wc/home https://cdn.jsdelivr.net/gh/homarr-labs/dashboard-icons/png/zoom.png
 fi
-
