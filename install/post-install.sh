@@ -80,14 +80,12 @@ LocalFileSigLevel = Optional
 #Include = /etc/pacman.d/mirrorlist
 
 [core]
-Server = https://mirror.omarchy.org/$repo/os/$arch
 Include = /etc/pacman.d/mirrorlist
 
 #[extra-testing]
 #Include = /etc/pacman.d/mirrorlist
 
 [extra]
-Server = https://mirror.omarchy.org/$repo/os/$arch
 Include = /etc/pacman.d/mirrorlist
 
 # If you want to run 32 bit applications on your x86_64 system,
@@ -112,4 +110,11 @@ Include = /etc/pacman.d/mirrorlist
 [omarchy]
 SigLevel = Optional TrustAll
 Server = https://pkgs.omarchy.org/$arch
+EOF
+
+# Set mirrors to global ones only
+sudo tee /etc/pacman.d/mirrorlist >/dev/null <<'EOF'
+Server = https://mirror.omarchy.org/$repo/os/$arch
+Server = https://mirror.rackspace.com/archlinux/$repo/os/$arch
+Server = https://geo.mirror.pkgbuild.com/$repo/os/$arch
 EOF
