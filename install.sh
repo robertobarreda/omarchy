@@ -2,9 +2,15 @@
 
 # Set up logging if we're in a chroot install environment
 if [ -n "$OMARCHY_CHROOT_INSTALL" ]; then
-  exec > >(tee -a /var/log/omarchy-install.log)
+  LOG_FILE="/var/log/omarchy-install.log"
+  mkdir -p "$(dirname "$LOG_FILE")"
+
+  # Start logging
+  echo "=== Omarchy Installation Started: $(date) ===" | tee -a "$LOG_FILE"
+
+  # Redirect all output to both console and log file
   exec 2>&1
-  echo "=== Omarchy Installation Started: $(date) ==="
+  exec > >(tee -a "$LOG_FILE")
 fi
 
 # Exit immediately if a command exits with a non-zero status
