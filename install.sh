@@ -78,4 +78,13 @@ run $OMARCHY_INSTALL/login/alt-bootloaders.sh
 
 # Finishing
 run $OMARCHY_INSTALL/post-install.sh
+
+# Stop logging before reboot to avoid capturing tte animation
+if [ -n "$OMARCHY_CHROOT_INSTALL" ]; then
+  echo "=== Omarchy Installation Completed: $(date) ===" | tee -a "$LOG_FILE"
+  echo "Rebooting system..." | tee -a "$LOG_FILE"
+  # Stop capturing output to log file
+  exec 1>&2
+fi
+
 run $OMARCHY_INSTALL/reboot.sh
