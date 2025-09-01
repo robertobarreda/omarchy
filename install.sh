@@ -1,21 +1,5 @@
 #!/bin/bash
 
-# Set up logging if we're in a chroot install environment
-if [ -n "$OMARCHY_CHROOT_INSTALL" ]; then
-  LOG_FILE="/var/log/omarchy-install.log"
-
-  # Create the log file with proper permissions
-  sudo touch "$LOG_FILE"
-  sudo chmod 666 "$LOG_FILE"
-
-  # Start logging
-  echo "=== Omarchy Installation Started: $(date) ===" | tee -a "$LOG_FILE"
-
-  # Redirect all output to both console and log file
-  exec 2>&1
-  exec > >(tee -a "$LOG_FILE")
-fi
-
 # Exit immediately if a command exits with a non-zero status
 set -eE
 
@@ -30,6 +14,7 @@ run() {
 }
 
 # Preparation
+run $OMARCHY_INSTALL/preflight/start-logs.sh
 run $OMARCHY_INSTALL/preflight/show-env.sh
 run $OMARCHY_INSTALL/preflight/trap-errors.sh
 run $OMARCHY_INSTALL/preflight/guard.sh
@@ -77,14 +62,7 @@ run $OMARCHY_INSTALL/login/limine-snapper.sh
 run $OMARCHY_INSTALL/login/alt-bootloaders.sh
 
 # Finishing
-run $OMARCHY_INSTALL/post-install.sh
-
-# Stop logging before reboot to avoid capturing tte animation
-if [ -n "$OMARCHY_CHROOT_INSTALL" ]; then
-  echo "=== Omarchy Installation Completed: $(date) ===" | tee -a "$LOG_FILE"
-  echo "Rebooting system..." | tee -a "$LOG_FILE"
-  # Stop capturing output to log file
-  exec 1>&2
-fi
+run $OMARCHY_INSTALL/post-install/pacman.sh
+run $OMARCHY_INSTALL/post-install/stop-logs.sh
 
 run $OMARCHY_INSTALL/reboot.sh
