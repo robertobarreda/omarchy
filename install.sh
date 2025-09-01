@@ -8,9 +8,13 @@ OMARCHY_INSTALL="$OMARCHY_PATH/install"
 export PATH="$OMARCHY_PATH/bin:$PATH"
 
 run() {
-  echo "Executing $(basename "$1")..."
+  local script_name=$(basename "$1")
+  local start_time=$(date +%s)
+  echo "Executing $script_name..."
   source "$1"
-  echo "Finished executing $(basename "$1")"
+  local end_time=$(date +%s)
+  local duration=$((end_time - start_time))
+  echo "Finished executing $script_name (took ${duration}s)"
 }
 
 # Preparation
