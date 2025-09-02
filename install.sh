@@ -111,6 +111,16 @@ export OMARCHY_OFFLINE_INSTALL
 export LOG_FILE              # Export LOG_FILE so it's available in subshells
 export GUM_SPIN_SHOW_ERROR=1 # Only show output on errors
 
+# Define and export chrootable_systemctl_enable for use in subshells
+chrootable_systemctl_enable() {
+  if [ -n "${OMARCHY_CHROOT_INSTALL:-}" ]; then
+    sudo systemctl enable $1
+  else
+    sudo systemctl enable --now $1
+  fi
+}
+export -f chrootable_systemctl_enable
+
 gum spin --title "Preparing..." -- bash -c 'run_preparation' || exit $?
 echo -e "Preparation finished [\033[32mX\033[0m]"
 
