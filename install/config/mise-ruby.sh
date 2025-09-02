@@ -28,4 +28,29 @@ else
   curl -fsSL "$RUBY_URL" | tar -xz -C "$MISE_RUBY_DIR"
 fi
 
+# Fix hardcoded paths if this is a relocated installation
+RUBY_INSTALL_DIR="$MISE_RUBY_DIR/${RUBY_VERSION}"
+if [ -d "$RUBY_INSTALL_DIR" ]; then
+  echo "Fixing hardcoded paths in Ruby installation..."
+
+  # Fix shebang lines in bin executables
+  find "$RUBY_INSTALL_DIR/bin" -type f -exec grep -l "^#!/home/" {} \; 2>/dev/null | while read -r file; do
+    sed -i "1s|^#!/home/[^/]*/|#!$HOME/|" "$file"
+  done
+
+  # Fix rbconfig.rb
+  RBCONFIG="$RUBY_INSTALL_DIR/lib/ruby/3.4.0/x86_64-linux/rbconfig.rb"
+  if [ -f "$RBCONFIG" ]; then
+    sed -i "s|/home/[^/]*/|$HOME/|g" "$RBCONFIG"
+  fi
+
+  # Fix pkgconfig file
+  PKGCONFIG="$RUBY_INSTALL_DIR/lib/pkgconfig/ruby-3.4.pc"
+  if [ -f "$PKGCONFIG" ]; then
+    sed -i "s|/home/[^/]*/|$HOME/|g" "$PKGCONFIG"
+  fi
+
+  echo "Path relocation complete"
+fi
+
 mise use --global "ruby@${RUBY_VERSION}"
