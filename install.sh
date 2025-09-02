@@ -11,21 +11,26 @@ run() {
   set -eEo pipefail
   local script_name=$(basename "$1")
   local start_time=$(date +%s)
-  
-  # Log to file if LOG_FILE is set, otherwise to stdout
+
+  echo "Executing $script_name..."
+
+  # If LOG_FILE is set, use tee to capture output to both log and stdout/stderr
+  # This allows gum spin to still see the output for --show-error
   if [ -n "${LOG_FILE:-}" ]; then
-    echo "Executing $script_name..." >> "$LOG_FILE" 2>&1
-    source "$1" >> "$LOG_FILE" 2>&1
-    local end_time=$(date +%s)
-    local duration=$((end_time - start_time))
-    echo "Finished executing $script_name (took ${duration}s)" >> "$LOG_FILE" 2>&1
+    source "$1" 2>&1 | tee -a "$LOG_FILE"
+    # Capture the exit status of source, not tee
+    local exit_status=${PIPESTATUS[0]}
   else
-    echo "Executing $script_name..."
     source "$1"
-    local end_time=$(date +%s)
-    local duration=$((end_time - start_time))
-    echo "Finished executing $script_name (took ${duration}s)"
+    local exit_status=$?
   fi
+
+  local end_time=$(date +%s)
+  local duration=$((end_time - start_time))
+  echo "Finished executing $script_name (took ${duration}s)"
+
+  # Propagate the exit status
+  return $exit_status
 }
 
 # Export run and variables so they're available in subshells
@@ -103,8 +108,8 @@ run $OMARCHY_INSTALL/preflight/start-logs.sh
 # Ensure critical environment variables are exported for gum spin subshells
 export OMARCHY_CHROOT_INSTALL
 export OMARCHY_OFFLINE_INSTALL
-export LOG_FILE  # Export LOG_FILE so it's available in subshells
-export GUM_SPIN_SHOW_ERROR=1  # Only show output on errors
+export LOG_FILE              # Export LOG_FILE so it's available in subshells
+export GUM_SPIN_SHOW_ERROR=1 # Only show output on errors
 
 gum spin --title "Preparing..." -- bash -c 'run_preparation' || exit $?
 echo -e "Preparation finished [X]"
