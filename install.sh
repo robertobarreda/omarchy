@@ -44,7 +44,6 @@ run_preparation() {
   run $OMARCHY_INSTALL/preflight/show-env.sh
   run $OMARCHY_INSTALL/preflight/trap-errors.sh
   run $OMARCHY_INSTALL/preflight/guard.sh
-  run $OMARCHY_INSTALL/preflight/chroot.sh
   run $OMARCHY_INSTALL/preflight/pacman.sh
   run $OMARCHY_INSTALL/preflight/migrations.sh
   run $OMARCHY_INSTALL/preflight/first-run-mode.sh
@@ -112,14 +111,7 @@ export LOG_FILE              # Export LOG_FILE so it's available in subshells
 export GUM_SPIN_SHOW_ERROR=1 # Only show output on errors
 
 # Define and export chrootable_systemctl_enable for use in subshells
-chrootable_systemctl_enable() {
-  if [ -n "${OMARCHY_CHROOT_INSTALL:-}" ]; then
-    sudo systemctl enable $1
-  else
-    sudo systemctl enable --now $1
-  fi
-}
-export -f chrootable_systemctl_enable
+source $OMARCHY_INSTALL/preflight/chroot.sh
 
 gum spin --title "Preparing..." -- bash -c 'run_preparation' || exit $?
 echo -e "Preparation finished [\033[32mX\033[0m]"
