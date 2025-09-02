@@ -5,6 +5,7 @@ set -eEo pipefail
 
 OMARCHY_PATH="$HOME/.local/share/omarchy"
 OMARCHY_INSTALL="$OMARCHY_PATH/install"
+LOG_FILE="/var/log/omarchy-install.log"
 export PATH="$OMARCHY_PATH/bin:$PATH"
 
 run() {
@@ -12,35 +13,33 @@ run() {
   local script_name=$(basename "$1")
   local start_time=$(date +%s)
 
-  echo "Executing $script_name..."
-
-  # If LOG_FILE is set, use tee to capture output to both log and stdout/stderr
-  # This allows gum spin to still see the output for --show-error
+  # Log everything silently (no tee to stdout)
   if [ -n "${LOG_FILE:-}" ]; then
-    source "$1" 2>&1 | tee -a "$LOG_FILE"
-    # Capture the exit status of source, not tee
-    local exit_status=${PIPESTATUS[0]}
+    echo "Executing $script_name..." >>"$LOG_FILE"
+    source "$1" >>"$LOG_FILE" 2>&1
+    local exit_status=$?
   else
+    echo "Executing $script_name..."
     source "$1"
     local exit_status=$?
   fi
 
   local end_time=$(date +%s)
   local duration=$((end_time - start_time))
-  echo "Finished executing $script_name (took ${duration}s)"
+
+  if [ -n "${LOG_FILE:-}" ]; then
+    echo "Finished executing $script_name (took ${duration}s)" >>"$LOG_FILE"
+  else
+    echo "Finished executing $script_name (took ${duration}s)"
+  fi
 
   # Propagate the exit status
   return $exit_status
 }
 
-# Export run and variables so they're available in subshells
-export -f run
-export OMARCHY_PATH OMARCHY_INSTALL
-
 # Group sections into functions
 run_preparation() {
   set -eEo pipefail
-  run $OMARCHY_INSTALL/preflight/start-logs.sh
   run $OMARCHY_INSTALL/preflight/show-env.sh
   run $OMARCHY_INSTALL/preflight/trap-errors.sh
   run $OMARCHY_INSTALL/preflight/guard.sh
@@ -96,35 +95,35 @@ run_login() {
 run_finishing() {
   set -eEo pipefail
   run $OMARCHY_INSTALL/post-install/pacman.sh
-  run $OMARCHY_INSTALL/post-install/stop-logs.sh
 }
 
-# Export all functions
-export -f run_preparation run_packaging run_configuration run_login run_finishing
-
-# Run each section with spinner
-
-# Ensure critical environment variables are exported for gum spin subshells
+# Export all environment variables and functions for gum spin subshells
+export OMARCHY_PATH
+export OMARCHY_INSTALL
 export OMARCHY_CHROOT_INSTALL
 export OMARCHY_OFFLINE_INSTALL
-export LOG_FILE              # Export LOG_FILE so it's available in subshells
-export GUM_SPIN_SHOW_ERROR=1 # Only show output on errors
+export LOG_FILE
 
-# Define and export chrootable_systemctl_enable for use in subshells
+# Export all functions
+export -f run run_preparation run_packaging run_configuration run_login run_finishing
+
+# Source and export helper functions
 source $OMARCHY_INSTALL/preflight/chroot.sh
+source $OMARCHY_INSTALL/preflight/start-logs.sh
 
 gum spin --title "Preparing..." -- bash -c 'run_preparation' || exit $?
-echo -e "Preparation finished [\033[32mX\033[0m]"
+echo -e "Preparation finished \033[32m[X]\033[0m"
 
 gum spin --title "Installing packages..." -- bash -c 'run_packaging' || exit $?
-echo -e "Packages installed [\033[32mX\033[0m]"
+echo -e "Packages installed \033[32m[X]\033[0m"
 
 gum spin --title "Configuring system..." -- bash -c 'run_configuration' || exit $?
-echo -e "System configured [\033[32mX\033[0m]"
+echo -e "System configured \033[32m[X]\033[0m"
 
 gum spin --title "Setting up login..." -- bash -c 'run_login' || exit $?
-echo -e "Login setup [\033[32mX\033[0m]"
+echo -e "Login setup \033[32m[X]\033[0m"
 
 gum spin --title "Finishing installation..." -- bash -c 'run_finishing' || exit $?
 
-run $OMARCHY_INSTALL/reboot.sh
+source $OMARCHY_INSTALL/post-install/stop-logs.sh
+source $OMARCHY_INSTALL/reboot.sh
