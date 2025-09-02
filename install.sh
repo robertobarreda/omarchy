@@ -40,6 +40,7 @@ export OMARCHY_PATH OMARCHY_INSTALL
 # Group sections into functions
 run_preparation() {
   set -eEo pipefail
+  run $OMARCHY_INSTALL/preflight/start-logs.sh
   run $OMARCHY_INSTALL/preflight/show-env.sh
   run $OMARCHY_INSTALL/preflight/trap-errors.sh
   run $OMARCHY_INSTALL/preflight/guard.sh
@@ -96,14 +97,13 @@ run_login() {
 run_finishing() {
   set -eEo pipefail
   run $OMARCHY_INSTALL/post-install/pacman.sh
+  run $OMARCHY_INSTALL/post-install/stop-logs.sh
 }
 
 # Export all functions
 export -f run_preparation run_packaging run_configuration run_login run_finishing
 
 # Run each section with spinner
-# The || exit $? ensures error codes propagate
-run $OMARCHY_INSTALL/preflight/start-logs.sh
 
 # Ensure critical environment variables are exported for gum spin subshells
 export OMARCHY_CHROOT_INSTALL
@@ -112,18 +112,17 @@ export LOG_FILE              # Export LOG_FILE so it's available in subshells
 export GUM_SPIN_SHOW_ERROR=1 # Only show output on errors
 
 gum spin --title "Preparing..." -- bash -c 'run_preparation' || exit $?
-echo -e "Preparation finished [X]"
+echo -e "Preparation finished [\033[32mX\033[0m]"
 
 gum spin --title "Installing packages..." -- bash -c 'run_packaging' || exit $?
-echo -e "Packages installed [X]"
+echo -e "Packages installed [\033[32mX\033[0m]"
 
 gum spin --title "Configuring system..." -- bash -c 'run_configuration' || exit $?
-echo -e "System configured [X]"
+echo -e "System configured [\033[32mX\033[0m]"
 
 gum spin --title "Setting up login..." -- bash -c 'run_login' || exit $?
-echo -e "Login setup [X]"
+echo -e "Login setup [\033[32mX\033[0m]"
 
 gum spin --title "Finishing installation..." -- bash -c 'run_finishing' || exit $?
 
-run $OMARCHY_INSTALL/post-install/stop-logs.sh
 run $OMARCHY_INSTALL/reboot.sh
