@@ -11,11 +11,21 @@ run() {
   set -eEo pipefail
   local script_name=$(basename "$1")
   local start_time=$(date +%s)
-  echo "Executing $script_name..."
-  source "$1"
-  local end_time=$(date +%s)
-  local duration=$((end_time - start_time))
-  echo "Finished executing $script_name (took ${duration}s)"
+  
+  # Log to file if LOG_FILE is set, otherwise to stdout
+  if [ -n "${LOG_FILE:-}" ]; then
+    echo "Executing $script_name..." >> "$LOG_FILE" 2>&1
+    source "$1" >> "$LOG_FILE" 2>&1
+    local end_time=$(date +%s)
+    local duration=$((end_time - start_time))
+    echo "Finished executing $script_name (took ${duration}s)" >> "$LOG_FILE" 2>&1
+  else
+    echo "Executing $script_name..."
+    source "$1"
+    local end_time=$(date +%s)
+    local duration=$((end_time - start_time))
+    echo "Finished executing $script_name (took ${duration}s)"
+  fi
 }
 
 # Export run and variables so they're available in subshells
@@ -89,6 +99,12 @@ export -f run_preparation run_packaging run_configuration run_login run_finishin
 # Run each section with spinner
 # The || exit $? ensures error codes propagate
 run $OMARCHY_INSTALL/preflight/start-logs.sh
+
+# Ensure critical environment variables are exported for gum spin subshells
+export OMARCHY_CHROOT_INSTALL
+export OMARCHY_OFFLINE_INSTALL
+export LOG_FILE  # Export LOG_FILE so it's available in subshells
+export GUM_SPIN_SHOW_ERROR=1  # Only show output on errors
 
 gum spin --title "Preparing..." -- bash -c 'run_preparation' || exit $?
 echo -e "Preparation finished [X]"

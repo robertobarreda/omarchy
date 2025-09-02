@@ -1,13 +1,13 @@
-if [ -n "$OMARCHY_CHROOT_INSTALL" ]; then
+if [ -n "${LOG_FILE:-}" ]; then
   OMARCHY_END_TIME=$(date '+%Y-%m-%d %H:%M:%S')
-  echo "=== Omarchy Installation Completed: $OMARCHY_END_TIME ==="
+  echo "=== Omarchy Installation Completed: $OMARCHY_END_TIME ===" | tee -a "$LOG_FILE"
 
   if [ -f "/var/log/archinstall/install.log" ]; then
     echo ""
     echo "=== Installation Time Summary ==="
 
-    ARCHINSTALL_START=$(grep -m1 '^\[' /var/log/archinstall/install.log | sed 's/^\[\([^]]*\)\].*/\1/')
-    ARCHINSTALL_END=$(grep 'Installation completed without any errors' /var/log/archinstall/install.log | sed 's/^\[\([^]]*\)\].*/\1/')
+    ARCHINSTALL_START=$(grep -m1 '^\[' /var/log/archinstall/install.log 2>/dev/null | sed 's/^\[\([^]]*\)\].*/\1/' || true)
+    ARCHINSTALL_END=$(grep 'Installation completed without any errors' /var/log/archinstall/install.log 2>/dev/null | sed 's/^\[\([^]]*\)\].*/\1/' || true)
 
     if [ -n "$ARCHINSTALL_START" ] && [ -n "$ARCHINSTALL_END" ]; then
       ARCH_START_EPOCH=$(date -d "$ARCHINSTALL_START" +%s)
@@ -17,7 +17,7 @@ if [ -n "$OMARCHY_CHROOT_INSTALL" ]; then
       ARCH_MINS=$((ARCH_DURATION / 60))
       ARCH_SECS=$((ARCH_DURATION % 60))
 
-      echo "Archinstall: ${ARCH_MINS}m ${ARCH_SECS}s"
+      echo "Archinstall: ${ARCH_MINS}m ${ARCH_SECS}s" | tee -a "$LOG_FILE"
     fi
 
     if [ -n "$OMARCHY_START_TIME" ]; then
@@ -28,20 +28,17 @@ if [ -n "$OMARCHY_CHROOT_INSTALL" ]; then
       OMARCHY_MINS=$((OMARCHY_DURATION / 60))
       OMARCHY_SECS=$((OMARCHY_DURATION % 60))
 
-      echo "Omarchy:     ${OMARCHY_MINS}m ${OMARCHY_SECS}s"
+      echo "Omarchy:     ${OMARCHY_MINS}m ${OMARCHY_SECS}s" | tee -a "$LOG_FILE"
 
       if [ -n "$ARCH_DURATION" ]; then
         TOTAL_DURATION=$((ARCH_DURATION + OMARCHY_DURATION))
         TOTAL_MINS=$((TOTAL_DURATION / 60))
         TOTAL_SECS=$((TOTAL_DURATION % 60))
-        echo "Total:       ${TOTAL_MINS}m ${TOTAL_SECS}s"
+        echo "Total:       ${TOTAL_MINS}m ${TOTAL_SECS}s" | tee -a "$LOG_FILE"
       fi
     fi
-    echo "================================="
+    echo "=================================" | tee -a "$LOG_FILE"
   fi
 
-  echo "Rebooting system..."
-
-  # Stop logging before reboot to avoid capturing tte animation
-  exec 1>&2
+  echo "Rebooting system..." | tee -a "$LOG_FILE"
 fi
