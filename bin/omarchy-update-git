@@ -1,5 +1,19 @@
 #!/bin/bash
 
 echo -e "\e[32mUpdate Omarchy\e[0m"
+
+# If tracked branch has been removed, prompt to change to master
+current_branch=$(git -C "$OMARCHY_PATH" branch --show-current)
+if ! git -C "$OMARCHY_PATH" ls-remote --heads origin "$current_branch" | grep -q .; then
+  echo -e "\e[33mWarning: Branch '$current_branch' no longer exists at origin.\e[0m"
+
+  if gum confirm "Would you like to switch to the main branch (master) before updating?"; then
+    git -C "$OMARCHY_PATH" checkout master
+    echo "Switched to master branch"
+  else
+    echo "Continuing with current branch configuration"
+  fi
+fi
+
 git -C $OMARCHY_PATH pull --autostash
 git -C $OMARCHY_PATH diff --check || git -C $OMARCHY_PATH reset --merge
