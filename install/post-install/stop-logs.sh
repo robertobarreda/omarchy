@@ -3,8 +3,8 @@ if [ -n "${LOG_FILE:-}" ]; then
   echo "=== Omarchy Installation Completed: $OMARCHY_END_TIME ===" >> "$LOG_FILE"
 
   if [ -f "/var/log/archinstall/install.log" ]; then
-    echo ""
-    echo "=== Installation Time Summary ==="
+    echo "" >> "$LOG_FILE"
+    echo "=== Installation Time Summary ===" >> "$LOG_FILE"
 
     ARCHINSTALL_START=$(grep -m1 '^\[' /var/log/archinstall/install.log 2>/dev/null | sed 's/^\[\([^]]*\)\].*/\1/' || true)
     ARCHINSTALL_END=$(grep 'Installation completed without any errors' /var/log/archinstall/install.log 2>/dev/null | sed 's/^\[\([^]]*\)\].*/\1/' || true)
