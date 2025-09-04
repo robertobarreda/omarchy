@@ -26,4 +26,4 @@ if sudo test -f /etc/sudoers.d/99-omarchy-installer; then
 fi
 
 echo
-gum confirm --default --affirmative "Reboot Now" --negative "" "" && sudo reboot
+gum confirm --default --affirmative "Reboot Now" --negative "" "" && reboot
