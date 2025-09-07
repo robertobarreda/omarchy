@@ -25,5 +25,7 @@ if sudo test -f /etc/sudoers.d/99-omarchy-installer; then
   echo "Remember to remove USB installer!" | tte --canvas-width 0 --anchor-text c --frame-rate 640 wipe
 fi
 
-echo
-gum confirm --default --affirmative "Reboot Now" --negative "" "" && reboot
+# Exit gracefully if user chooses not to reboot
+if gum confirm --padding "1 0 0 $PADDING_DISTANCE" --default --affirmative "Reboot Now" --negative "" ""; then
+  reboot now
+fi
