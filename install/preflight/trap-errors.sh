@@ -28,11 +28,16 @@ cleanup() {
 
 # Error handler
 catch_errors() {
+  local error_type="${1:-failed}"
   cleanup
 
   clear_logo
 
-  gum style --foreground 1 --padding "1 0 1 $PADDING_LEFT" "Omarchy installation failed!"
+  if [ "$error_type" = "interrupted" ]; then
+    gum style --foreground 1 --padding "1 0 1 $PADDING_LEFT" "Omarchy installation interrupted!"
+  else
+    gum style --foreground 1 --padding "1 0 1 $PADDING_LEFT" "Omarchy installation failed!"
+  fi
 
   LOG_LINES=$(($TERM_HEIGHT - $LOGO_HEIGHT - 35))
 
@@ -96,7 +101,7 @@ catch_errors() {
       ;;
     "Exit" | "")
       gum style "You can retry later by running: bash ~/.local/share/omarchy/install.sh"
-      break
+      exit 1
       ;;
     esac
   done
@@ -104,9 +109,7 @@ catch_errors() {
 
 # Interrupt handler
 interrupt() {
-  cleanup
-
-  gum style --foreground 1 --padding "1 0 1 $PADDING_LEFT" "Omarchy installation interrupted!"
+  catch_errors "interrupted"
 }
 
 # Set up traps
