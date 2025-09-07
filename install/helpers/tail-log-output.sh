@@ -24,7 +24,7 @@ start_log_output() {
         else
           truncated_line="$line"
         fi
-        printf "\033[90m${PADDING}  → %s\033[0m\n" "$truncated_line"
+        printf "\033[90m${PADDING_LEFT_SPACES}  → %s\033[0m\n" "$truncated_line"
       done
 
       # Clear remaining lines if fewer than log_lines
@@ -39,3 +39,4 @@ start_log_output() {
   ) &
   monitor_pid=$!
 }
+

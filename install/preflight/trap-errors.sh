@@ -23,10 +23,6 @@ cleanup() {
     unset monitor_pid
   fi
 
-  # Clear log area and restore cursor
-  ansi_restore_cursor
-  ansi_move_up 2 # Move up to replace "Installing Omarchy..." line
-  ansi_clear_below
   ansi_show_cursor
 }
 
@@ -34,7 +30,9 @@ cleanup() {
 catch_errors() {
   cleanup
 
-  gum style --foreground 1 --padding "1 0 1 $PADDING_DISTANCE" "Omarchy installation failed!"
+  clear_logo
+
+  gum style --foreground 1 --padding "1 0 1 $PADDING_LEFT" "Omarchy installation failed!"
 
   LOG_LINES=$(($TERM_HEIGHT - $LOGO_HEIGHT - 35))
 
@@ -47,72 +45,68 @@ catch_errors() {
       else
         truncated_line="$line"
       fi
-      echo "${PADDING}$truncated_line"
+      gum style "$truncated_line"
     done
     echo
   fi
 
-  echo "${PADDING}This command halted with exit code $?:"
-  echo "${PADDING}$BASH_COMMAND"
-  gum style --padding "0 0 0 $PADDING_DISTANCE" "$QR_CODE"
+  gum style "This command halted with exit code $?:"
+  gum style "$BASH_COMMAND"
+  gum style "$QR_CODE"
   echo
-  echo "${PADDING}Get help from the community via QR code or at https://discord.gg/tXFUdasqhY"
+  gum style "Get help from the community via QR code or at https://discord.gg/tXFUdasqhY"
 
   # Offer options menu
-  if command -v gum >/dev/null; then
-    while true; do
-      # Build menu options
-      options=()
+  while true; do
+    # Build menu options
+    options=()
 
-      # If not offline install, show retry first
-      if [ -z "$OMARCHY_OFFLINE_INSTALL" ]; then
-        options+=("Retry installation")
-      fi
+    # If not offline install, show retry first
+    if [ -z "$OMARCHY_OFFLINE_INSTALL" ]; then
+      options+=("Retry installation")
+    fi
 
-      # Add upload option if internet is available
-      if ping -c 1 -W 1 1.1.1.1 >/dev/null 2>&1; then
-        options+=("Upload log for support")
-      fi
+    # Add upload option if internet is available
+    if ping -c 1 -W 1 1.1.1.1 >/dev/null 2>&1; then
+      options+=("Upload log for support")
+    fi
 
-      # Add remaining options
-      options+=("View full log")
-      
-      # Add retry at the end if offline install
-      if [ -n "$OMARCHY_OFFLINE_INSTALL" ]; then
-        options+=("Retry installation")
-      fi
-      
-      options+=("Exit")
+    # Add remaining options
+    options+=("View full log")
 
-      choice=$(gum choose "${options[@]}" --header "What would you like to do?" --height 6 --padding "1 $PADDING_DISTANCE")
+    # Add retry at the end if offline install
+    if [ -n "$OMARCHY_OFFLINE_INSTALL" ]; then
+      options+=("Retry installation")
+    fi
 
-      case "$choice" in
-      "Retry installation")
-        bash ~/.local/share/omarchy/install.sh
-        break
-        ;;
-      "View full log")
-        less "$LOG_FILE"
-        ;;
-      "Upload log for support")
-        omarchy-upload-install-log
-        ;;
-      "Exit" | "")
-        echo "You can retry later by running: bash ~/.local/share/omarchy/install.sh"
-        break
-        ;;
-      esac
-    done
-  else
-    echo "You can retry later by running: bash ~/.local/share/omarchy/install.sh"
-  fi
+    options+=("Exit")
+
+    choice=$(gum choose "${options[@]}" --header "What would you like to do?" --height 6 --padding "1 $PADDING_LEFT")
+
+    case "$choice" in
+    "Retry installation")
+      bash ~/.local/share/omarchy/install.sh
+      break
+      ;;
+    "View full log")
+      less "$LOG_FILE"
+      ;;
+    "Upload log for support")
+      omarchy-upload-install-log
+      ;;
+    "Exit" | "")
+      gum style "You can retry later by running: bash ~/.local/share/omarchy/install.sh"
+      break
+      ;;
+    esac
+  done
 }
 
 # Interrupt handler
 interrupt() {
   cleanup
 
-  gum style --foreground 1 --padding "1 0 1 $PADDING_DISTANCE" "Omarchy installation interrupted!"
+  gum style --foreground 1 --padding "1 0 1 $PADDING_LEFT" "Omarchy installation interrupted!"
 }
 
 # Set up traps

@@ -26,6 +26,6 @@ if sudo test -f /etc/sudoers.d/99-omarchy-installer; then
 fi
 
 # Exit gracefully if user chooses not to reboot
-if gum confirm --padding "1 0 0 $PADDING_DISTANCE" --default --affirmative "Reboot Now" --negative "" ""; then
+if gum confirm --padding "1 0 0 $PADDING_LEFT" --default --affirmative "Reboot Now" --negative "" ""; then
   reboot now
 fi
