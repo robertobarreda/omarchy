@@ -8,10 +8,6 @@ OMARCHY_INSTALL="$OMARCHY_PATH/install"
 LOG_FILE="/var/log/omarchy-install.log"
 export PATH="$OMARCHY_PATH/bin:$PATH"
 
-if [ -z "$TERM_WIDTH" ]; then
-  source "$OMARCHY_INSTALL/helpers/size.sh"
-fi
-
 run_logged() {
   source "$1" >>"$LOG_FILE" 2>&1
 }
@@ -19,6 +15,7 @@ run_logged() {
 #################################
 # Helpers
 #################################
+source "$OMARCHY_INSTALL/helpers/size.sh"
 source "$OMARCHY_INSTALL/helpers/ansi-codes.sh"
 source "$OMARCHY_INSTALL/helpers/logo.sh"
 source "$OMARCHY_INSTALL/helpers/gum-styling.sh"
