@@ -17,12 +17,7 @@ QR_CODE='
 
 # Cleanup function - always stop monitoring and restore cursor
 cleanup() {
-  # Stop log monitoring if running
-  if [ -n "${monitor_pid:-}" ]; then
-    kill $monitor_pid 2>/dev/null || true
-    unset monitor_pid
-  fi
-
+  stop_log_output
   ansi_show_cursor
 }
 
