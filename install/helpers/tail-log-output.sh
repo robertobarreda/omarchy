@@ -1,42 +1,40 @@
 #!/bin/bash
 
-# Function to start log output monitoring
 start_log_output() {
-  # Save cursor position for log output
   ansi_save_cursor
 
-  # Hide cursor for cleaner display
   ansi_hide_cursor
 
-  # Start background process to monitor log
   (
-    log_lines=20
-    max_line_width=$((LOGO_WIDTH - 4))
+    local log_lines=20
+    local max_line_width=$((LOGO_WIDTH - 4))
+
     while true; do
-      # Go back to saved position
-      ansi_restore_cursor
+      # Read the last N lines into an array
+      mapfile -t current_lines < <(tail -n $log_lines "$LOG_FILE" 2>/dev/null)
 
-      # Display last N lines from log
-      tail -n $log_lines "$LOG_FILE" 2>/dev/null | while IFS= read -r line; do
-        ansi_clear_line
+      # Build complete output buffer with escape sequences
+      output=""
+      for ((i = 0; i < log_lines; i++)); do
+        line="${current_lines[i]:-}"
+
+        # Truncate if needed
         if [ ${#line} -gt $max_line_width ]; then
-          truncated_line="${line:0:$max_line_width}..."
-        else
-          truncated_line="$line"
+          line="${line:0:$max_line_width}..."
         fi
-        printf "\033[90m${PADDING_LEFT_SPACES}  → %s\033[0m\n" "$truncated_line"
+
+        # Add clear line escape and formatted output for each line
+        if [ -n "$line" ]; then
+          output+="${ANSI_CLEAR_LINE}${ANSI_GRAY}${PADDING_LEFT_SPACES}  → ${line}${ANSI_RESET}\n"
+        else
+          output+="${ANSI_CLEAR_LINE}${PADDING_LEFT_SPACES}\n"
+        fi
       done
 
-      # Clear remaining lines if fewer than log_lines
-      shown=$(tail -n $log_lines "$LOG_FILE" 2>/dev/null | wc -l)
-      for ((i = shown; i < log_lines; i++)); do
-        ansi_clear_line
-        echo
-      done
+      printf "${ANSI_RESTORE_CURSOR}%b" "$output"
 
       sleep 0.1
     done
   ) &
   monitor_pid=$!
 }
-
