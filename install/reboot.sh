@@ -27,5 +27,10 @@ fi
 
 # Exit gracefully if user chooses not to reboot
 if gum confirm --padding "1 0 0 $PADDING_LEFT" --default --affirmative "Reboot Now" --negative "" ""; then
-  reboot now
+  # Use systemctl if available, otherwise fallback to reboot command
+  if command -v systemctl &>/dev/null; then
+    systemctl reboot
+  else
+    reboot
+  fi
 fi
