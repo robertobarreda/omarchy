@@ -8,122 +8,88 @@ OMARCHY_INSTALL="$OMARCHY_PATH/install"
 LOG_FILE="/var/log/omarchy-install.log"
 export PATH="$OMARCHY_PATH/bin:$PATH"
 
-run() {
-  set -eEo pipefail
-  local script_name=$(basename "$1")
-  local start_time=$(date +%s)
+if [ -z "$TERM_WIDTH" ]; then
+  source "$OMARCHY_INSTALL/helpers/size.sh"
+fi
 
-  # Log everything silently (no tee to stdout)
-  if [ -n "${LOG_FILE:-}" ]; then
-    echo "Executing $script_name..." >>"$LOG_FILE"
-    source "$1" >>"$LOG_FILE" 2>&1
-    local exit_status=$?
-  else
-    echo "Executing $script_name..."
-    source "$1"
-    local exit_status=$?
-  fi
-
-  local end_time=$(date +%s)
-  local duration=$((end_time - start_time))
-
-  if [ -n "${LOG_FILE:-}" ]; then
-    echo "Finished executing $script_name (took ${duration}s)" >>"$LOG_FILE"
-  else
-    echo "Finished executing $script_name (took ${duration}s)"
-  fi
-
-  # Propagate the exit status
-  return $exit_status
+run_logged() {
+  source "$1" >>"$LOG_FILE" 2>&1
 }
 
-# Group sections into functions
-run_preparation() {
-  set -eEo pipefail
-  run $OMARCHY_INSTALL/preflight/show-env.sh
-  run $OMARCHY_INSTALL/preflight/trap-errors.sh
-  run $OMARCHY_INSTALL/preflight/guard.sh
-  run $OMARCHY_INSTALL/preflight/pacman.sh
-  run $OMARCHY_INSTALL/preflight/migrations.sh
-  run $OMARCHY_INSTALL/preflight/first-run-mode.sh
-}
+#################################
+# Helpers
+#################################
+source "$OMARCHY_INSTALL/helpers/ansi-codes.sh"
+source "$OMARCHY_INSTALL/helpers/logo.sh"
+source "$OMARCHY_INSTALL/helpers/gum-styling.sh"
+source "$OMARCHY_INSTALL/preflight/trap-errors.sh"
+source "$OMARCHY_INSTALL/helpers/tail-log-output.sh"
 
-run_packaging() {
-  set -eEo pipefail
-  run $OMARCHY_INSTALL/packages.sh
-  run $OMARCHY_INSTALL/packaging/fonts.sh
-  run $OMARCHY_INSTALL/packaging/lazyvim.sh
-  run $OMARCHY_INSTALL/packaging/webapps.sh
-  run $OMARCHY_INSTALL/packaging/tuis.sh
-}
-
-run_configuration() {
-  set -eEo pipefail
-  run $OMARCHY_INSTALL/config/config.sh
-  run $OMARCHY_INSTALL/config/theme.sh
-  run $OMARCHY_INSTALL/config/branding.sh
-  run $OMARCHY_INSTALL/config/git.sh
-  run $OMARCHY_INSTALL/config/gpg.sh
-  run $OMARCHY_INSTALL/config/timezones.sh
-  run $OMARCHY_INSTALL/config/increase-sudo-tries.sh
-  run $OMARCHY_INSTALL/config/increase-lockout-limit.sh
-  run $OMARCHY_INSTALL/config/ssh-flakiness.sh
-  run $OMARCHY_INSTALL/config/detect-keyboard-layout.sh
-  run $OMARCHY_INSTALL/config/xcompose.sh
-  run $OMARCHY_INSTALL/config/mise-ruby.sh
-  run $OMARCHY_INSTALL/config/docker.sh
-  run $OMARCHY_INSTALL/config/mimetypes.sh
-  run $OMARCHY_INSTALL/config/localdb.sh
-  run $OMARCHY_INSTALL/config/sudoless-asdcontrol.sh
-  run $OMARCHY_INSTALL/config/hardware/network.sh
-  run $OMARCHY_INSTALL/config/hardware/fix-fkeys.sh
-  run $OMARCHY_INSTALL/config/hardware/bluetooth.sh
-  run $OMARCHY_INSTALL/config/hardware/printer.sh
-  run $OMARCHY_INSTALL/config/hardware/usb-autosuspend.sh
-  run $OMARCHY_INSTALL/config/hardware/ignore-power-button.sh
-  run $OMARCHY_INSTALL/config/hardware/nvidia.sh
-  run $OMARCHY_INSTALL/config/hardware/fix-f13-amd-audio-input.sh
-}
-
-run_login() {
-  set -eEo pipefail
-  run $OMARCHY_INSTALL/login/plymouth.sh
-  run $OMARCHY_INSTALL/login/limine-snapper.sh
-  run $OMARCHY_INSTALL/login/alt-bootloaders.sh
-}
-
-run_finishing() {
-  set -eEo pipefail
-  run $OMARCHY_INSTALL/post-install/pacman.sh
-}
-
-# Export all environment variables and functions for gum spin subshells
-export OMARCHY_PATH
-export OMARCHY_INSTALL
-export OMARCHY_CHROOT_INSTALL
-export OMARCHY_OFFLINE_INSTALL
-export LOG_FILE
-
-# Export all functions
-export -f run run_preparation run_packaging run_configuration run_login run_finishing
-
-# Source and export helper functions
 source $OMARCHY_INSTALL/preflight/chroot.sh
 source $OMARCHY_INSTALL/preflight/start-logs.sh
 
-gum spin --title "Preparing..." -- bash -c 'run_preparation' || exit $?
-echo -e "Preparation finished \033[32m[X]\033[0m"
+clear_logo
 
-gum spin --title "Installing packages..." -- bash -c 'run_packaging' || exit $?
-echo -e "Packages installed \033[32m[X]\033[0m"
+gum style --foreground 3 --padding "1 0 0 $PADDING_LEFT" "Installing Omarchy..."
 
-gum spin --title "Configuring system..." -- bash -c 'run_configuration' || exit $?
-echo -e "System configured \033[32m[X]\033[0m"
+start_log_output
 
-gum spin --title "Setting up login..." -- bash -c 'run_login' || exit $?
-echo -e "Login setup \033[32m[X]\033[0m"
+#################################
+# Preparation
+#################################
+run_logged $OMARCHY_INSTALL/preflight/show-env.sh
+source $OMARCHY_INSTALL/preflight/guard.sh # Need to be able to prompt
+run_logged $OMARCHY_INSTALL/preflight/pacman.sh
+run_logged $OMARCHY_INSTALL/preflight/migrations.sh
+run_logged $OMARCHY_INSTALL/preflight/first-run-mode.sh
 
-gum spin --title "Finishing installation..." -- bash -c 'run_finishing' || exit $?
+#################################
+# Packages
+#################################
+run_logged $OMARCHY_INSTALL/packages.sh
+run_logged $OMARCHY_INSTALL/packaging/fonts.sh
+run_logged $OMARCHY_INSTALL/packaging/lazyvim.sh
+run_logged $OMARCHY_INSTALL/packaging/webapps.sh
+run_logged $OMARCHY_INSTALL/packaging/tuis.sh
 
+#################################
+# Configs
+#################################
+run_logged $OMARCHY_INSTALL/config/config.sh
+run_logged $OMARCHY_INSTALL/config/theme.sh
+run_logged $OMARCHY_INSTALL/config/branding.sh
+run_logged $OMARCHY_INSTALL/config/git.sh
+run_logged $OMARCHY_INSTALL/config/gpg.sh
+run_logged $OMARCHY_INSTALL/config/timezones.sh
+run_logged $OMARCHY_INSTALL/config/increase-sudo-tries.sh
+run_logged $OMARCHY_INSTALL/config/increase-lockout-limit.sh
+run_logged $OMARCHY_INSTALL/config/ssh-flakiness.sh
+run_logged $OMARCHY_INSTALL/config/detect-keyboard-layout.sh
+run_logged $OMARCHY_INSTALL/config/xcompose.sh
+run_logged $OMARCHY_INSTALL/config/mise-ruby.sh
+run_logged $OMARCHY_INSTALL/config/docker.sh
+run_logged $OMARCHY_INSTALL/config/mimetypes.sh
+run_logged $OMARCHY_INSTALL/config/localdb.sh
+run_logged $OMARCHY_INSTALL/config/sudoless-asdcontrol.sh
+run_logged $OMARCHY_INSTALL/config/hardware/network.sh
+run_logged $OMARCHY_INSTALL/config/hardware/fix-fkeys.sh
+run_logged $OMARCHY_INSTALL/config/hardware/bluetooth.sh
+run_logged $OMARCHY_INSTALL/config/hardware/printer.sh
+run_logged $OMARCHY_INSTALL/config/hardware/usb-autosuspend.sh
+run_logged $OMARCHY_INSTALL/config/hardware/ignore-power-button.sh
+run_logged $OMARCHY_INSTALL/config/hardware/nvidia.sh
+run_logged $OMARCHY_INSTALL/config/hardware/fix-f13-amd-audio-input.sh
+
+#################################
+# Login
+#################################
+run_logged $OMARCHY_INSTALL/login/plymouth.sh
+run_logged $OMARCHY_INSTALL/login/limine-snapper.sh
+run_logged $OMARCHY_INSTALL/login/alt-bootloaders.sh
+
+#################################
+# Post-install
+#################################
+run_logged $OMARCHY_INSTALL/post-install/pacman.sh
 source $OMARCHY_INSTALL/post-install/stop-logs.sh
 source $OMARCHY_INSTALL/reboot.sh
