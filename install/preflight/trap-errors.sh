@@ -26,8 +26,20 @@ cleanup() {
   ansi_show_cursor
 }
 
+# Track if we're already handling an error to prevent double-trapping
+ERROR_HANDLING=false
+
 # Error handler
 catch_errors() {
+  # Store exit code immediately before it gets overwritten
+  local exit_code=$?
+
+  # Prevent recursive error handling
+  if [ "$ERROR_HANDLING" = "true" ]; then
+    return
+  fi
+  ERROR_HANDLING=true
+
   local error_type="${1:-failed}"
   cleanup
 
@@ -61,7 +73,7 @@ catch_errors() {
     echo
   fi
 
-  gum style "This command halted with exit code $?:"
+  gum style "This command halted with exit code $exit_code:"
   # Truncate long command lines to fit the display
   local cmd="$BASH_COMMAND"
   local max_cmd_width=$((LOGO_WIDTH - 4))

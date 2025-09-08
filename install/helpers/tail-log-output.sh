@@ -38,3 +38,11 @@ start_log_output() {
   ) &
   monitor_pid=$!
 }
+
+stop_log_output() {
+  if [ -n "${monitor_pid:-}" ]; then
+    kill $monitor_pid 2>/dev/null || true
+    wait $monitor_pid 2>/dev/null || true
+    unset monitor_pid
+  fi
+}
