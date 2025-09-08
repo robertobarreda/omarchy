@@ -8,8 +8,24 @@ OMARCHY_INSTALL="$OMARCHY_PATH/install"
 LOG_FILE="/var/log/omarchy-install.log"
 export PATH="$OMARCHY_PATH/bin:$PATH"
 
+# Save original stdout and stderr for trap to use
+exec 3>&1 4>&2
+
 run_logged() {
-  source "$1" >>"$LOG_FILE" 2>&1
+  local script="$1"
+
+  export CURRENT_SCRIPT="$script"
+
+  # Use bash -c to create a clean subshell
+  bash -c "source '$script'" </dev/null >>"$LOG_FILE" 2>&1
+
+  local exit_code=$?
+
+  if [ $exit_code -eq 0 ]; then
+    unset CURRENT_SCRIPT
+  fi
+
+  return $exit_code
 }
 
 #################################
@@ -24,6 +40,7 @@ source "$OMARCHY_INSTALL/helpers/tail-log-output.sh"
 
 source $OMARCHY_INSTALL/preflight/chroot.sh
 source $OMARCHY_INSTALL/preflight/start-logs.sh
+source $OMARCHY_INSTALL/preflight/guard.sh # Need to be able to prompt
 
 clear_logo
 

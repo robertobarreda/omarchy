@@ -74,13 +74,19 @@ catch_errors() {
   fi
 
   gum style "This command halted with exit code $exit_code:"
-  # Truncate long command lines to fit the display
-  local cmd="$BASH_COMMAND"
-  local max_cmd_width=$((LOGO_WIDTH - 4))
-  if [ ${#cmd} -gt $max_cmd_width ]; then
-    cmd="${cmd:0:$max_cmd_width}..."
+
+  # Show the failed script if available, otherwise show the command
+  if [ -n "${CURRENT_SCRIPT:-}" ]; then
+    gum style "Failed script: $CURRENT_SCRIPT"
+  else
+    # Truncate long command lines to fit the display
+    local cmd="$BASH_COMMAND"
+    local max_cmd_width=$((LOGO_WIDTH - 4))
+    if [ ${#cmd} -gt $max_cmd_width ]; then
+      cmd="${cmd:0:$max_cmd_width}..."
+    fi
+    gum style "$cmd"
   fi
-  gum style "$cmd"
   gum style "$QR_CODE"
   echo
   gum style "Get help from the community via QR code or at https://discord.gg/tXFUdasqhY"
