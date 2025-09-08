@@ -78,7 +78,6 @@ term_background_bright: 24283b
 EOF
 
   sudo pacman -S --noconfirm --needed limine-snapper-sync limine-mkinitcpio-hook
-  sudo limine-update
 
   # Match Snapper configs if not installing from the ISO
   if [ -z "${OMARCHY_CHROOT_INSTALL:-}" ]; then

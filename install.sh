@@ -55,6 +55,7 @@ run_logged $OMARCHY_INSTALL/preflight/show-env.sh
 run_logged $OMARCHY_INSTALL/preflight/pacman.sh
 run_logged $OMARCHY_INSTALL/preflight/migrations.sh
 run_logged $OMARCHY_INSTALL/preflight/first-run-mode.sh
+run_logged $OMARCHY_INSTALL/preflight/disable-mkinitcpio.sh
 
 #################################
 # Packages
@@ -97,6 +98,7 @@ run_logged $OMARCHY_INSTALL/config/hardware/fix-f13-amd-audio-input.sh
 # Login
 #################################
 run_logged $OMARCHY_INSTALL/login/plymouth.sh
+run_logged $OMARCHY_INSTALL/login/enable-mkinitcpio.sh
 run_logged $OMARCHY_INSTALL/login/limine-snapper.sh
 run_logged $OMARCHY_INSTALL/login/alt-bootloaders.sh
 
