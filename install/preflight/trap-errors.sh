@@ -31,6 +31,12 @@ catch_errors() {
   local error_type="${1:-failed}"
   cleanup
 
+  # Restore stdout and stderr to original (saved in FD 3 and 4)
+  # This ensures output goes to screen, not log file
+  if [ -e /proc/self/fd/3 ] && [ -e /proc/self/fd/4 ]; then
+    exec 1>&3 2>&4
+  fi
+
   clear_logo
 
   if [ "$error_type" = "interrupted" ]; then
@@ -56,7 +62,13 @@ catch_errors() {
   fi
 
   gum style "This command halted with exit code $?:"
-  gum style "$BASH_COMMAND"
+  # Truncate long command lines to fit the display
+  local cmd="$BASH_COMMAND"
+  local max_cmd_width=$((LOGO_WIDTH - 4))
+  if [ ${#cmd} -gt $max_cmd_width ]; then
+    cmd="${cmd:0:$max_cmd_width}..."
+  fi
+  gum style "$cmd"
   gum style "$QR_CODE"
   echo
   gum style "Get help from the community via QR code or at https://discord.gg/tXFUdasqhY"
