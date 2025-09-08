@@ -124,6 +124,20 @@ interrupt() {
   catch_errors "interrupted"
 }
 
+# Exit handler - ensures cleanup happens on any exit
+exit_handler() {
+  local exit_code=$?
+
+  # Only run if we're exiting with an error and haven't already handled it
+  if [ $exit_code -ne 0 ] && [ "$ERROR_HANDLING" != "true" ]; then
+    catch_errors
+  else
+    # Still need to clean up even on successful exit
+    cleanup
+  fi
+}
+
 # Set up traps
 trap catch_errors ERR
+trap exit_handler EXIT
 trap interrupt INT TERM
