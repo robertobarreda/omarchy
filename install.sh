@@ -39,8 +39,8 @@ source "$OMARCHY_INSTALL/preflight/trap-errors.sh"
 source "$OMARCHY_INSTALL/helpers/tail-log-output.sh"
 
 source $OMARCHY_INSTALL/preflight/chroot.sh
-source $OMARCHY_INSTALL/preflight/start-logs.sh
 source $OMARCHY_INSTALL/preflight/guard.sh # Need to be able to prompt
+source $OMARCHY_INSTALL/preflight/start-logs.sh
 
 clear_logo
 
@@ -52,7 +52,6 @@ start_log_output
 # Preparation
 #################################
 run_logged $OMARCHY_INSTALL/preflight/show-env.sh
-source $OMARCHY_INSTALL/preflight/guard.sh # Need to be able to prompt
 run_logged $OMARCHY_INSTALL/preflight/pacman.sh
 run_logged $OMARCHY_INSTALL/preflight/migrations.sh
 run_logged $OMARCHY_INSTALL/preflight/first-run-mode.sh
