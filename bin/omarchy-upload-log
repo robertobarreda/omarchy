@@ -1,0 +1,69 @@
+#!/bin/bash
+
+# Upload logs to 0x0.st
+
+LOG_TYPE="${1:-install}"
+TEMP_LOG="/tmp/upload-log.txt"
+
+case "$LOG_TYPE" in
+install)
+  ARCHINSTALL_LOG="/var/log/archinstall/install.log"
+  OMARCHY_LOG="/var/log/omarchy-install.log"
+
+  # Combine whatever logs exist (archinstall first, then omarchy)
+  cat $ARCHINSTALL_LOG $OMARCHY_LOG >"$TEMP_LOG" 2>/dev/null
+
+  if [ ! -s "$TEMP_LOG" ]; then
+    echo "Error: No install logs found"
+    exit 1
+  fi
+
+  echo "Uploading installation log to 0x0.st..."
+  ;;
+
+this-boot)
+  journalctl -b 0 >"$TEMP_LOG" 2>/dev/null
+
+  if [ ! -s "$TEMP_LOG" ]; then
+    echo "Error: No logs found for current boot"
+    exit 1
+  fi
+
+  echo "Uploading current boot logs to 0x0.st..."
+  ;;
+
+last-boot)
+  journalctl -b -1 >"$TEMP_LOG" 2>/dev/null
+
+  if [ ! -s "$TEMP_LOG" ]; then
+    echo "Error: No logs found for previous boot"
+    exit 1
+  fi
+
+  echo "Uploading previous boot logs to 0x0.st..."
+  ;;
+
+*)
+  echo "Usage: $0 [install|this-boot|last-boot]"
+  echo "  install    - Upload installation logs (default)"
+  echo "  this-boot  - Upload logs from current boot"
+  echo "  last-boot  - Upload logs from previous boot"
+  exit 1
+  ;;
+esac
+
+echo ""
+
+URL=$(curl -sF "file=@$TEMP_LOG" -Fexpires=24 https://0x0.st)
+
+if [ $? -eq 0 ] && [ -n "$URL" ]; then
+  echo "✓ Log uploaded successfully!"
+  echo "Share this URL:"
+  echo ""
+  echo "  $URL"
+  echo ""
+  echo "This link will expire in 24 hours."
+else
+  echo "Error: Failed to upload log file"
+  exit 1
+fi
