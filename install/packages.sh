@@ -1,132 +1,17 @@
 #!/bin/bash
 
-sudo pacman -S --noconfirm --needed \
-  1password-beta \
-  1password-cli \
-  asdcontrol-git \
-  alacritty \
-  asdcontrol-git \
-  avahi \
-  bash-completion \
-  bat \
-  blueberry \
-  brightnessctl \
-  btop \
-  cargo \
-  clang \
-  cups \
-  cups-browsed \
-  cups-filters \
-  cups-pdf \
-  docker \
-  docker-buildx \
-  docker-compose \
-  dust \
-  evince \
-  eza \
-  fastfetch \
-  fcitx5 \
-  fcitx5-gtk \
-  fcitx5-qt \
-  fd \
-  ffmpegthumbnailer \
-  fontconfig \
-  fzf \
-  gcc14 \
-  github-cli \
-  gnome-calculator \
-  gnome-keyring \
-  gnome-themes-extra \
-  gum \
-  gvfs-mtp \
-  gvfs-smb \
-  hypridle \
-  hyprland \
-  hyprland-qtutils \
-  hyprlock \
-  hyprpicker \
-  hyprshot \
-  hyprsunset \
-  imagemagick \
-  impala \
-  imv \
-  inetutils \
-  iwd \
-  jq \
-  kdenlive \
-  kvantum-qt5 \
-  lazydocker \
-  lazygit \
-  less \
-  libqalculate \
-  libreoffice \
-  llvm \
-  localsend \
-  luarocks \
-  mako \
-  man \
-  mariadb-libs \
-  mise \
-  mpv \
-  nautilus \
-  noto-fonts \
-  noto-fonts-cjk \
-  noto-fonts-emoji \
-  noto-fonts-extra \
-  nss-mdns \
-  nvim \
-  obs-studio \
-  obsidian \
-  omarchy-chromium \
-  omarchy-lazyvim \
-  pamixer \
-  pinta \
-  playerctl \
-  plocate \
-  plymouth \
-  polkit-gnome \
-  postgresql-libs \
-  power-profiles-daemon \
-  python-gobject \
-  python-poetry-core \
-  python-terminaltexteffects \
-  qt5-wayland \
-  ripgrep \
-  satty \
-  signal-desktop \
-  slurp \
-  spotify \
-  starship \
-  sushi \
-  swaybg \
-  swayosd \
-  system-config-printer \
-  tldr \
-  tree-sitter-cli \
-  ttf-cascadia-mono-nerd \
-  ttf-ia-writer \
-  ttf-jetbrains-mono-nerd \
-  typora \
-  tzupdate \
-  ufw \
-  ufw-docker \
-  unzip \
-  uwsm \
-  walker-bin \
-  waybar \
-  wf-recorder \
-  whois \
-  wireless-regdb \
-  wiremix \
-  wireplumber \
-  wl-clip-persist \
-  wl-clipboard \
-  wl-screenrec \
-  woff2-font-awesome \
-  xdg-desktop-portal-gtk \
-  xdg-desktop-portal-hyprland \
-  xmlstarlet \
-  xournalpp \
-  yaru-icon-theme \
-  yay \
-  zoxide
+# Read packages from the unified package list file
+PACKAGE_LIST="$OMARCHY_INSTALL/omarchy-core.packages"
+
+# Check if package list exists
+if [ ! -f "$PACKAGE_LIST" ]; then
+  echo "Error: Package list not found at $PACKAGE_LIST"
+  exit 1
+fi
+
+# Read packages from file (skip comments and empty lines)
+mapfile -t packages < <(grep -v '^#' "$PACKAGE_LIST" | grep -v '^$')
+
+# Install all packages
+sudo pacman -S --noconfirm --needed "${packages[@]}"
+
