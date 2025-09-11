@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Read packages from the unified package list file
-PACKAGE_LIST="$OMARCHY_INSTALL/omarchy-core.packages"
+PACKAGE_LIST="$OMARCHY_INSTALL/omarchy-base.packages"
 
 # Check if package list exists
 if [ ! -f "$PACKAGE_LIST" ]; then
