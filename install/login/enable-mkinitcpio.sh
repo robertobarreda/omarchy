@@ -13,5 +13,8 @@ fi
 
 echo "mkinitcpio hooks re-enabled"
 
-sudo limine-update
-
+if command -v limine &>/dev/null; then
+  sudo limine-update
+else
+  sudo mkinitcpio -P
+fi
