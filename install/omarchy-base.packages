@@ -1,6 +1,5 @@
-# Omarchy core package list - single source of truth for all package installations
-# This file is used by both install/packages.sh and the ISO builder
-# One package per line, comments start with #
+# Omarchy core package list installed via install/packages.sh
+# This file is also used by the ISO builder when determining needs
 
 1password-beta
 1password-cli
