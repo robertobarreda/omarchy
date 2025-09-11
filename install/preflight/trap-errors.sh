@@ -92,7 +92,7 @@ catch_errors() {
     options=()
 
     # If not offline install, show retry first
-    if [ -z "$OMARCHY_OFFLINE_INSTALL" ]; then
+    if [[ -z "${OMARCHY_OFFLINE_INSTALL:-}" ]]; then
       options+=("Retry installation")
     fi
 
@@ -105,7 +105,7 @@ catch_errors() {
     options+=("View full log")
 
     # Add retry at the end if offline install
-    if [ -n "$OMARCHY_OFFLINE_INSTALL" ]; then
+    if [[ -n "${OMARCHY_OFFLINE_INSTALL:-}" ]]; then
       options+=("Retry installation")
     fi
 
