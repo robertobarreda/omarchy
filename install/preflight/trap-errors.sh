@@ -125,7 +125,6 @@ catch_errors() {
       omarchy-upload-install-log
       ;;
     "Exit" | "")
-      gum style "You can retry later by running: bash ~/.local/share/omarchy/install.sh"
       exit 1
       ;;
     esac
