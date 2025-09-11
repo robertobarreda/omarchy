@@ -36,14 +36,18 @@ run_logged() {
 #################################
 # Helpers
 #################################
-source "$OMARCHY_INSTALL/helpers/size.sh"
-source "$OMARCHY_INSTALL/helpers/ansi-codes.sh"
-source "$OMARCHY_INSTALL/helpers/logo.sh"
-source "$OMARCHY_INSTALL/helpers/gum-styling.sh"
-source "$OMARCHY_INSTALL/preflight/trap-errors.sh"
-source "$OMARCHY_INSTALL/helpers/tail-log-output.sh"
+source $OMARCHY_INSTALL/helpers/ansi-codes.sh
+source $OMARCHY_INSTALL/helpers/chroot.sh
+source $OMARCHY_INSTALL/helpers/logo.sh
+source $OMARCHY_INSTALL/helpers/trap-errors.sh
+source $OMARCHY_INSTALL/helpers/tail-log-output.sh
 
-source $OMARCHY_INSTALL/preflight/chroot.sh
+#################################
+# ENV Setup + Precheck
+#################################
+source $OMARCHY_INSTALL/preflight/set-size-vars.sh
+source $OMARCHY_INSTALL/preflight/set-gum-styling.sh
+source $OMARCHY_INSTALL/preflight/ensure-gum-installed.sh
 source $OMARCHY_INSTALL/preflight/guard.sh # Need to be able to prompt
 source $OMARCHY_INSTALL/preflight/start-logs.sh
 
