@@ -109,8 +109,8 @@ run_logged $OMARCHY_INSTALL/config/hardware/fix-apple-bcm4360.sh
 # Login
 #################################
 run_logged $OMARCHY_INSTALL/login/plymouth.sh
-run_logged $OMARCHY_INSTALL/login/enable-mkinitcpio.sh
 run_logged $OMARCHY_INSTALL/login/limine-snapper.sh
+run_logged $OMARCHY_INSTALL/login/enable-mkinitcpio.sh
 run_logged $OMARCHY_INSTALL/login/alt-bootloaders.sh
 
 #################################
