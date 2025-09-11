@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # Use local files for ISO install
-if [ -n "${OMARCHY_CHROOT_INSTALL:-}" ]; then
+if [ -n "${OMARCHY_OFFLINE_INSTALL:-}" ]; then
   ICON_DIR="$HOME/.local/share/applications/icons"
 
   omarchy-webapp-install "HEY" https://app.hey.com "$ICON_DIR/HEY.png"
