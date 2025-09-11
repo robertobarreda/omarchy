@@ -3,9 +3,9 @@
 # Exit immediately if a command exits with a non-zero status
 set -eEo pipefail
 
-OMARCHY_PATH="$HOME/.local/share/omarchy"
-OMARCHY_INSTALL="$OMARCHY_PATH/install"
-LOG_FILE="/var/log/omarchy-install.log"
+export OMARCHY_PATH="$HOME/.local/share/omarchy"
+export OMARCHY_INSTALL="$OMARCHY_PATH/install"
+export LOG_FILE="/var/log/omarchy-install.log"
 export PATH="$OMARCHY_PATH/bin:$PATH"
 
 # Save original stdout and stderr for trap to use
