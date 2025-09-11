@@ -27,10 +27,13 @@ fi
 
 # Exit gracefully if user chooses not to reboot
 if gum confirm --padding "1 0 0 $PADDING_LEFT" --default --affirmative "Reboot Now" --negative "" ""; then
+  # Clear screen to hide any shutdown messages
+  clear
+
   # Use systemctl if available, otherwise fallback to reboot command
   if command -v systemctl &>/dev/null; then
-    systemctl reboot
+    systemctl reboot --no-wall 2>/dev/null
   else
-    reboot
+    reboot 2>/dev/null
   fi
 fi
