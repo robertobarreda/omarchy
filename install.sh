@@ -16,13 +16,18 @@ run_logged() {
 
   export CURRENT_SCRIPT="$script"
 
+  echo "[$(date '+%Y-%m-%d %H:%M:%S')] Starting: $script" >>"$LOG_FILE"
+
   # Use bash -c to create a clean subshell
   bash -c "source '$script'" </dev/null >>"$LOG_FILE" 2>&1
 
   local exit_code=$?
 
   if [ $exit_code -eq 0 ]; then
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] Completed: $script" >>"$LOG_FILE"
     unset CURRENT_SCRIPT
+  else
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] Failed: $script (exit code: $exit_code)" >>"$LOG_FILE"
   fi
 
   return $exit_code
