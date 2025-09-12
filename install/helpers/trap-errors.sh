@@ -18,7 +18,8 @@ QR_CODE='
 # Cleanup function - always stop monitoring and restore cursor
 cleanup() {
   stop_log_output
-  ansi_show_cursor
+  # Show cursor
+  printf "\033[?25h"
 }
 
 # Track if we're already handling an error to prevent double-trapping

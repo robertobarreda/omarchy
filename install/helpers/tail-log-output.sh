@@ -1,9 +1,15 @@
 #!/bin/bash
 
 start_log_output() {
-  ansi_save_cursor
+  local ANSI_SAVE_CURSOR="\033[s"
+  local ANSI_RESTORE_CURSOR="\033[u"
+  local ANSI_CLEAR_LINE="\033[2K"
+  local ANSI_HIDE_CURSOR="\033[?25l"
+  local ANSI_RESET="\033[0m"
 
-  ansi_hide_cursor
+  # Save cursor position and hide cursor
+  printf "${ANSI_SAVE_CURSOR}"
+  printf "${ANSI_HIDE_CURSOR}"
 
   (
     local log_lines=20
@@ -25,7 +31,7 @@ start_log_output() {
 
         # Add clear line escape and formatted output for each line
         if [ -n "$line" ]; then
-          output+="${ANSI_CLEAR_LINE}${ANSI_GRAY}${PADDING_LEFT_SPACES}  → ${line}${ANSI_RESET}\n"
+          output+="${ANSI_CLEAR_LINE}\033[90m${PADDING_LEFT_SPACES}  → ${line}${ANSI_RESET}\n"
         else
           output+="${ANSI_CLEAR_LINE}${PADDING_LEFT_SPACES}\n"
         fi

@@ -34,7 +34,6 @@ run_logged() {
 }
 
 # Helpers
-source $OMARCHY_INSTALL/helpers/ansi-codes.sh
 source $OMARCHY_INSTALL/helpers/chroot.sh
 source $OMARCHY_INSTALL/helpers/logo.sh
 source $OMARCHY_INSTALL/helpers/trap-errors.sh
