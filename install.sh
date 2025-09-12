@@ -72,6 +72,7 @@ run_logged $OMARCHY_INSTALL/preflight/disable-mkinitcpio.sh
 run_logged $OMARCHY_INSTALL/packages.sh
 run_logged $OMARCHY_INSTALL/packaging/fonts.sh
 run_logged $OMARCHY_INSTALL/packaging/lazyvim.sh
+run_logged $OMARCHY_INSTALL/packaging/icons.sh
 run_logged $OMARCHY_INSTALL/packaging/webapps.sh
 run_logged $OMARCHY_INSTALL/packaging/tuis.sh
 
