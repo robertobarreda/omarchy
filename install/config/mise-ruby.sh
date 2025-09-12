@@ -7,25 +7,22 @@ mise settings set ruby.ruby_build_opts "CC=gcc-14 CXX=g++-14"
 mise settings add idiomatic_version_file_enable_tools ruby
 
 # Check if architecture is x86_64
-if [ "$(uname -m)" != "x86_64" ]; then
-  echo "Skipping prebuilt Ruby installation: not x86_64 architecture (detected: $(uname -m))"
-  exit 0
+if [ "$(uname -m)" = "x86_64" ]; then
+  RUBY_VERSION="3.4.5"
+  RUBY_TARBALL="ruby-${RUBY_VERSION}-rails-8.0.2.1-x86_64.tar.gz"
+  RUBY_URL="https://pkgs.omarchy.org/ruby/${RUBY_TARBALL}"
+  MISE_RUBY_DIR="$HOME/.local/share/mise/installs/ruby"
+  OFFLINE_CACHE="/var/cache/omarchy/ruby"
+
+  mkdir -p "$MISE_RUBY_DIR"
+
+  if [ "${OMARCHY_INSTALL_MODE:-offline}" = "offline" ]; then
+    echo "Installing Ruby from offline cache..."
+    tar -xzf "${OFFLINE_CACHE}/${RUBY_TARBALL}" -C "$MISE_RUBY_DIR"
+  else
+    echo "Downloading pre-built Ruby ${RUBY_VERSION}..."
+    curl -fsSL "$RUBY_URL" | tar -xz -C "$MISE_RUBY_DIR"
+  fi
+
+  mise use --global "ruby@${RUBY_VERSION}"
 fi
-
-RUBY_VERSION="3.4.5"
-RUBY_TARBALL="ruby-${RUBY_VERSION}-rails-8.0.2.1-x86_64.tar.gz"
-RUBY_URL="https://pkgs.omarchy.org/ruby/${RUBY_TARBALL}"
-MISE_RUBY_DIR="$HOME/.local/share/mise/installs/ruby"
-OFFLINE_CACHE="/var/cache/omarchy/ruby"
-
-mkdir -p "$MISE_RUBY_DIR"
-
-if [ "${OMARCHY_INSTALL_MODE:-offline}" = "offline" ]; then
-  echo "Installing Ruby from offline cache..."
-  tar -xzf "${OFFLINE_CACHE}/${RUBY_TARBALL}" -C "$MISE_RUBY_DIR"
-else
-  echo "Downloading pre-built Ruby ${RUBY_VERSION}..."
-  curl -fsSL "$RUBY_URL" | tar -xz -C "$MISE_RUBY_DIR"
-fi
-
-mise use --global "ruby@${RUBY_VERSION}"
