@@ -1,11 +1,11 @@
 # Clean up - stop monitoring and clear log area
 cleanup
 
-if [ -n "${LOG_FILE:-}" ]; then
+if [ -n "${OMARCHY_INSTALL_LOG_FILE:-}" ]; then
   OMARCHY_END_TIME=$(date '+%Y-%m-%d %H:%M:%S')
-  echo "=== Omarchy Installation Completed: $OMARCHY_END_TIME ===" >>"$LOG_FILE"
-  echo "" >>"$LOG_FILE"
-  echo "=== Installation Time Summary ===" >>"$LOG_FILE"
+  echo "=== Omarchy Installation Completed: $OMARCHY_END_TIME ===" >>"$OMARCHY_INSTALL_LOG_FILE"
+  echo "" >>"$OMARCHY_INSTALL_LOG_FILE"
+  echo "=== Installation Time Summary ===" >>"$OMARCHY_INSTALL_LOG_FILE"
 
   if [ -f "/var/log/archinstall/install.log" ]; then
     ARCHINSTALL_START=$(grep -m1 '^\[' /var/log/archinstall/install.log 2>/dev/null | sed 's/^\[\([^]]*\)\].*/\1/' || true)
@@ -19,7 +19,7 @@ if [ -n "${LOG_FILE:-}" ]; then
       ARCH_MINS=$((ARCH_DURATION / 60))
       ARCH_SECS=$((ARCH_DURATION % 60))
 
-      echo "Archinstall: ${ARCH_MINS}m ${ARCH_SECS}s" >>"$LOG_FILE"
+      echo "Archinstall: ${ARCH_MINS}m ${ARCH_SECS}s" >>"$OMARCHY_INSTALL_LOG_FILE"
     fi
   fi
 
@@ -31,16 +31,16 @@ if [ -n "${LOG_FILE:-}" ]; then
     OMARCHY_MINS=$((OMARCHY_DURATION / 60))
     OMARCHY_SECS=$((OMARCHY_DURATION % 60))
 
-    echo "Omarchy:     ${OMARCHY_MINS}m ${OMARCHY_SECS}s" >>"$LOG_FILE"
+    echo "Omarchy:     ${OMARCHY_MINS}m ${OMARCHY_SECS}s" >>"$OMARCHY_INSTALL_LOG_FILE"
 
     if [ -n "$ARCH_DURATION" ]; then
       TOTAL_DURATION=$((ARCH_DURATION + OMARCHY_DURATION))
       TOTAL_MINS=$((TOTAL_DURATION / 60))
       TOTAL_SECS=$((TOTAL_DURATION % 60))
-      echo "Total:       ${TOTAL_MINS}m ${TOTAL_SECS}s" >>"$LOG_FILE"
+      echo "Total:       ${TOTAL_MINS}m ${TOTAL_SECS}s" >>"$OMARCHY_INSTALL_LOG_FILE"
     fi
   fi
-  echo "=================================" >>"$LOG_FILE"
+  echo "=================================" >>"$OMARCHY_INSTALL_LOG_FILE"
 
-  echo "Rebooting system..." >>"$LOG_FILE"
+  echo "Rebooting system..." >>"$OMARCHY_INSTALL_LOG_FILE"
 fi

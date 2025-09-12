@@ -1,7 +1,7 @@
 # Create the log file with proper permissions
-sudo touch "$LOG_FILE"
-sudo chmod 666 "$LOG_FILE"
+sudo touch "$OMARCHY_INSTALL_LOG_FILE"
+sudo chmod 666 "$OMARCHY_INSTALL_LOG_FILE"
 
 # Start logging
 export OMARCHY_START_TIME=$(date '+%Y-%m-%d %H:%M:%S')
-echo "=== Omarchy Installation Started: $OMARCHY_START_TIME ===" >>"$LOG_FILE"
+echo "=== Omarchy Installation Started: $OMARCHY_START_TIME ===" >>"$OMARCHY_INSTALL_LOG_FILE"

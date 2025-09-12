@@ -55,9 +55,9 @@ catch_errors() {
   LOG_LINES=$(($TERM_HEIGHT - $LOGO_HEIGHT - 35))
 
   # Show the last lines of the log to help debug
-  if [ -n "${LOG_FILE:-}" ] && [ -f "$LOG_FILE" ]; then
+  if [ -n "${OMARCHY_INSTALL_LOG_FILE:-}" ] && [ -f "$OMARCHY_INSTALL_LOG_FILE" ]; then
     max_line_width=$((LOGO_WIDTH - 4))
-    tail -n $LOG_LINES "$LOG_FILE" | while IFS= read -r line; do
+    tail -n $LOG_LINES "$OMARCHY_INSTALL_LOG_FILE" | while IFS= read -r line; do
       if [ ${#line} -gt $max_line_width ]; then
         truncated_line="${line:0:$max_line_width}..."
       else
@@ -119,7 +119,7 @@ catch_errors() {
       break
       ;;
     "View full log")
-      less "$LOG_FILE"
+      less "$OMARCHY_INSTALL_LOG_FILE"
       ;;
     "Upload log for support")
       omarchy-upload-install-log
