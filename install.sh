@@ -33,18 +33,14 @@ run_logged() {
   return $exit_code
 }
 
-#################################
 # Helpers
-#################################
 source $OMARCHY_INSTALL/helpers/ansi-codes.sh
 source $OMARCHY_INSTALL/helpers/chroot.sh
 source $OMARCHY_INSTALL/helpers/logo.sh
 source $OMARCHY_INSTALL/helpers/trap-errors.sh
 source $OMARCHY_INSTALL/helpers/tail-log-output.sh
 
-#################################
 # ENV Setup + Precheck
-#################################
 source $OMARCHY_INSTALL/preflight/set-size-vars.sh
 source $OMARCHY_INSTALL/preflight/set-gum-styling.sh
 source $OMARCHY_INSTALL/preflight/ensure-gum-installed.sh
@@ -57,18 +53,14 @@ gum style --foreground 3 --padding "1 0 0 $PADDING_LEFT" "Installing Omarchy..."
 
 start_log_output
 
-#################################
 # Preparation
-#################################
 run_logged $OMARCHY_INSTALL/preflight/show-env.sh
 run_logged $OMARCHY_INSTALL/preflight/pacman.sh
 run_logged $OMARCHY_INSTALL/preflight/migrations.sh
 run_logged $OMARCHY_INSTALL/preflight/first-run-mode.sh
 run_logged $OMARCHY_INSTALL/preflight/disable-mkinitcpio.sh
 
-#################################
 # Packages
-#################################
 run_logged $OMARCHY_INSTALL/packages.sh
 run_logged $OMARCHY_INSTALL/packaging/fonts.sh
 run_logged $OMARCHY_INSTALL/packaging/lazyvim.sh
@@ -76,9 +68,7 @@ run_logged $OMARCHY_INSTALL/packaging/icons.sh
 run_logged $OMARCHY_INSTALL/packaging/webapps.sh
 run_logged $OMARCHY_INSTALL/packaging/tuis.sh
 
-#################################
 # Configs
-#################################
 run_logged $OMARCHY_INSTALL/config/config.sh
 run_logged $OMARCHY_INSTALL/config/theme.sh
 run_logged $OMARCHY_INSTALL/config/branding.sh
@@ -106,17 +96,13 @@ run_logged $OMARCHY_INSTALL/config/hardware/nvidia.sh
 run_logged $OMARCHY_INSTALL/config/hardware/fix-f13-amd-audio-input.sh
 run_logged $OMARCHY_INSTALL/config/hardware/fix-apple-bcm4360.sh
 
-#################################
 # Login
-#################################
 run_logged $OMARCHY_INSTALL/login/plymouth.sh
 run_logged $OMARCHY_INSTALL/login/limine-snapper.sh
 run_logged $OMARCHY_INSTALL/login/enable-mkinitcpio.sh
 run_logged $OMARCHY_INSTALL/login/alt-bootloaders.sh
 
-#################################
 # Post-install
-#################################
 run_logged $OMARCHY_INSTALL/post-install/pacman.sh
 source $OMARCHY_INSTALL/post-install/stop-logs.sh
 source $OMARCHY_INSTALL/reboot.sh
