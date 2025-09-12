@@ -42,7 +42,6 @@ source $OMARCHY_INSTALL/helpers/tail-log-output.sh
 # ENV Setup + Precheck
 source $OMARCHY_INSTALL/preflight/set-size-vars.sh
 source $OMARCHY_INSTALL/preflight/set-gum-styling.sh
-source $OMARCHY_INSTALL/preflight/ensure-gum-installed.sh
 source $OMARCHY_INSTALL/preflight/guard.sh # Need to be able to prompt
 source $OMARCHY_INSTALL/preflight/start-logs.sh
 
