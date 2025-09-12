@@ -30,14 +30,6 @@ if [ -n "$(lspci | grep -i 'nvidia')" ]; then
     KERNEL_HEADERS="linux-hardened-headers"
   fi
 
-  # Don't do this for offline installs
-  if [ "${OMARCHY_INSTALL_MODE:-offline}" = "online" ]; then
-    # Enable multilib repository for 32-bit libraries
-    if ! grep -q "^\[multilib\]" /etc/pacman.conf; then
-      sudo sed -i '/^#\s*\[multilib\]/,/^#\s*Include/ s/^#\s*//' /etc/pacman.conf
-    fi
-  fi
-
   # force package database refresh
   sudo pacman -Syu --noconfirm
 
