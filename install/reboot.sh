@@ -6,17 +6,14 @@ echo
 echo
 echo "You're done!" | tte --canvas-width 0 --anchor-text c --frame-rate 640 wipe
 
-# Display installation stats if available
-if [ -f "$OMARCHY_INSTALL_LOG_FILE" ] && grep -q "Installation Time Summary" "$OMARCHY_INSTALL_LOG_FILE" 2>/dev/null; then
+# Display installation time if available
+if [ -f "$OMARCHY_INSTALL_LOG_FILE" ] && grep -q "Total:" "$OMARCHY_INSTALL_LOG_FILE" 2>/dev/null; then
   echo
   echo
-  # Build the complete stats block and pass to tte all at once
-  STATS=$(tail -n 20 "$OMARCHY_INSTALL_LOG_FILE" | sed -n '/=== Installation Time Summary ===/,/^===/p' | grep -E "^(Archinstall|Omarchy|Total):")
-  {
-    echo "Installation Time Summary"
-    echo
-    echo "$STATS"
-  } | tte --canvas-width 0 --anchor-text c --frame-rate 200 waves
+  TOTAL_TIME=$(tail -n 20 "$OMARCHY_INSTALL_LOG_FILE" | grep "^Total:" | sed 's/^Total:[[:space:]]*//')
+  if [ -n "$TOTAL_TIME" ]; then
+    echo "Installation completed in $TOTAL_TIME" | tte --canvas-width 0 --anchor-text c --frame-rate 200 waves
+  fi
 fi
 
 if sudo test -f /etc/sudoers.d/99-omarchy-installer; then
