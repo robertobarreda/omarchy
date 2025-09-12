@@ -1,12 +1,5 @@
 #!/bin/bash
 
-# See if the branch has been deleted
-current_branch=$(git -C "$OMARCHY_PATH" branch --show-current)
-if ! git -C "$OMARCHY_PATH" ls-remote --heads origin "$current_branch" | grep -q .; then
-  echo "Omarchy update available (branch '$current_branch' no longer exists at origin)"
-  exit 0
-fi
-
 # Get remote tag
 latest_tag=$(git -C "$OMARCHY_PATH" ls-remote --tags origin | grep -v "{}" | awk '{print $2}' | sed 's#refs/tags/##' | sort -V | tail -n 1)
 if [[ -z "$latest_tag" ]]; then
