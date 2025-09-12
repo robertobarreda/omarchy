@@ -91,8 +91,8 @@ catch_errors() {
     # Build menu options
     options=()
 
-    # If not offline install, show retry first
-    if [[ -z "${OMARCHY_OFFLINE_INSTALL:-}" ]]; then
+    # If online install, show retry first
+    if [[ "${OMARCHY_INSTALL_MODE:-offline}" = "online" ]]; then
       options+=("Retry installation")
     fi
 
@@ -105,7 +105,7 @@ catch_errors() {
     options+=("View full log")
 
     # Add retry at the end if offline install
-    if [[ -n "${OMARCHY_OFFLINE_INSTALL:-}" ]]; then
+    if [[ "${OMARCHY_INSTALL_MODE:-offline}" = "offline" ]]; then
       options+=("Retry installation")
     fi
 

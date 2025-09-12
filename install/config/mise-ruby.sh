@@ -20,7 +20,7 @@ OFFLINE_CACHE="/var/cache/omarchy/ruby"
 
 mkdir -p "$MISE_RUBY_DIR"
 
-if [ -n "$OMARCHY_OFFLINE_INSTALL" ]; then
+if [ "${OMARCHY_INSTALL_MODE:-offline}" = "offline" ]; then
   echo "Installing Ruby from offline cache..."
   tar -xzf "${OFFLINE_CACHE}/${RUBY_TARBALL}" -C "$MISE_RUBY_DIR"
 else

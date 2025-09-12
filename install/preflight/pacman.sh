@@ -1,7 +1,7 @@
 #!/bin/bash
 
-# Only run if NOT running an offline install
-if [ -z "${OMARCHY_OFFLINE_INSTALL:-}" ]; then
+# Only run if running an online install
+if [ "${OMARCHY_INSTALL_MODE:-offline}" = "online" ]; then
   # Install build tools
   sudo pacman -S --needed --noconfirm base-devel
 
