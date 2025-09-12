@@ -25,6 +25,39 @@ cleanup() {
 # Track if we're already handling an error to prevent double-trapping
 ERROR_HANDLING=false
 
+# Display truncated log lines from the install log
+show_log_tail() {
+  local LOG_LINES=$(($TERM_HEIGHT - $LOGO_HEIGHT - 35))
+
+  if [ -n "${OMARCHY_INSTALL_LOG_FILE:-}" ] && [ -f "$OMARCHY_INSTALL_LOG_FILE" ]; then
+    local max_line_width=$((LOGO_WIDTH - 4))
+    tail -n $LOG_LINES "$OMARCHY_INSTALL_LOG_FILE" | while IFS= read -r line; do
+      if [ ${#line} -gt $max_line_width ]; then
+        local truncated_line="${line:0:$max_line_width}..."
+      else
+        local truncated_line="$line"
+      fi
+      gum style "$truncated_line"
+    done
+    echo
+  fi
+}
+
+# Display the failed command or script name
+show_failed_script_or_command() {
+  if [ -n "${CURRENT_SCRIPT:-}" ]; then
+    gum style "Failed script: $CURRENT_SCRIPT"
+  else
+    # Truncate long command lines to fit the display
+    local cmd="$BASH_COMMAND"
+    local max_cmd_width=$((LOGO_WIDTH - 4))
+    if [ ${#cmd} -gt $max_cmd_width ]; then
+      cmd="${cmd:0:$max_cmd_width}..."
+    fi
+    gum style "$cmd"
+  fi
+}
+
 # Error handler
 catch_errors() {
   # Prevent recursive error handling
@@ -53,36 +86,12 @@ catch_errors() {
     gum style --foreground 1 --padding "1 0 1 $PADDING_LEFT" "Omarchy installation failed!"
   fi
 
-  LOG_LINES=$(($TERM_HEIGHT - $LOGO_HEIGHT - 35))
-
-  # Show the last lines of the log to help debug
-  if [ -n "${OMARCHY_INSTALL_LOG_FILE:-}" ] && [ -f "$OMARCHY_INSTALL_LOG_FILE" ]; then
-    max_line_width=$((LOGO_WIDTH - 4))
-    tail -n $LOG_LINES "$OMARCHY_INSTALL_LOG_FILE" | while IFS= read -r line; do
-      if [ ${#line} -gt $max_line_width ]; then
-        truncated_line="${line:0:$max_line_width}..."
-      else
-        truncated_line="$line"
-      fi
-      gum style "$truncated_line"
-    done
-    echo
-  fi
+  show_log_tail
 
   gum style "This command halted with exit code $exit_code:"
 
-  # Show the failed script if available, otherwise show the command
-  if [ -n "${CURRENT_SCRIPT:-}" ]; then
-    gum style "Failed script: $CURRENT_SCRIPT"
-  else
-    # Truncate long command lines to fit the display
-    local cmd="$BASH_COMMAND"
-    local max_cmd_width=$((LOGO_WIDTH - 4))
-    if [ ${#cmd} -gt $max_cmd_width ]; then
-      cmd="${cmd:0:$max_cmd_width}..."
-    fi
-    gum style "$cmd"
-  fi
+  show_failed_script_or_command
+
   gum style "$QR_CODE"
   echo
   gum style "Get help from the community via QR code or at https://discord.gg/tXFUdasqhY"
