@@ -27,14 +27,14 @@ ERROR_HANDLING=false
 
 # Error handler
 catch_errors() {
-  # Store exit code immediately before it gets overwritten
-  local exit_code=$?
-
   # Prevent recursive error handling
   if [ "$ERROR_HANDLING" = "true" ]; then
     return
   fi
   ERROR_HANDLING=true
+
+  # Store exit code immediately before it gets overwritten
+  local exit_code=$?
 
   local error_type="${1:-failed}"
   cleanup
