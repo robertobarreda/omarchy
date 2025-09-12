@@ -163,8 +163,3 @@ exit_handler() {
 trap catch_errors ERR
 trap exit_handler EXIT
 trap interrupt INT TERM
-
-# Ensure gum is installed before we use it
-if ! command -v gum &>/dev/null; then
-  sudo pacman -S --needed --noconfirm gum
-fi

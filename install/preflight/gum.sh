@@ -1,3 +1,7 @@
+if ! command -v gum &>/dev/null; then
+  sudo pacman -S --needed --noconfirm gum
+fi
+
 # Tokyo Night theme for gum confirm
 export GUM_CONFIRM_PROMPT_FOREGROUND="6"     # Cyan for prompt
 export GUM_CONFIRM_SELECTED_FOREGROUND="0"   # Black text on selected
