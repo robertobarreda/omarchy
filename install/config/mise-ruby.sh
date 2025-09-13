@@ -4,8 +4,8 @@ mise settings set ruby.ruby_build_opts "CC=gcc-14 CXX=g++-14"
 # Trust .ruby-version
 mise settings add idiomatic_version_file_enable_tools ruby
 
-# Check if architecture is x86_64
-if [ "$(uname -m)" = "x86_64" ]; then
+# Install pre-built Ruby + Rails for x86_64
+if [[ $(uname -m) == "x86_64" ]]; then
   RUBY_VERSION="3.4.5"
   RUBY_TARBALL="ruby-${RUBY_VERSION}-rails-8.0.2.1-x86_64.tar.gz"
   RUBY_URL="https://pkgs.omarchy.org/ruby/${RUBY_TARBALL}"
@@ -14,7 +14,7 @@ if [ "$(uname -m)" = "x86_64" ]; then
 
   mkdir -p "$MISE_RUBY_DIR"
 
-  if [ "${OMARCHY_INSTALL_MODE:-offline}" = "offline" ]; then
+  if [[ ${OMARCHY_INSTALL_MODE:-offline} == "offline" ]]; then
     echo "Installing Ruby from offline cache..."
     tar -xzf "${OFFLINE_CACHE}/${RUBY_TARBALL}" -C "$MISE_RUBY_DIR"
   else
