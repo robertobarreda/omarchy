@@ -6,6 +6,7 @@ start_log_output() {
   local ANSI_CLEAR_LINE="\033[2K"
   local ANSI_HIDE_CURSOR="\033[?25l"
   local ANSI_RESET="\033[0m"
+  local ANSI_GRAY="\033[90m"
 
   # Save cursor position and hide cursor
   printf "${ANSI_SAVE_CURSOR}"
@@ -31,7 +32,7 @@ start_log_output() {
 
         # Add clear line escape and formatted output for each line
         if [ -n "$line" ]; then
-          output+="${ANSI_CLEAR_LINE}\033[90m${PADDING_LEFT_SPACES}  → ${line}${ANSI_RESET}\n"
+          output+="${ANSI_CLEAR_LINE}${ANSI_GRAY}${PADDING_LEFT_SPACES}  → ${line}${ANSI_RESET}\n"
         else
           output+="${ANSI_CLEAR_LINE}${PADDING_LEFT_SPACES}\n"
         fi
