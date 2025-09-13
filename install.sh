@@ -11,19 +11,17 @@ export PATH="$OMARCHY_PATH/bin:$PATH"
 # Helpers
 source $OMARCHY_INSTALL/helpers/chroot.sh
 source $OMARCHY_INSTALL/helpers/logo.sh
-source $OMARCHY_INSTALL/helpers/run-logged.sh
 source $OMARCHY_INSTALL/helpers/gum.sh
 source $OMARCHY_INSTALL/helpers/trap-errors.sh
-source $OMARCHY_INSTALL/helpers/tail-log-output.sh
+source $OMARCHY_INSTALL/helpers/logging.sh
 
 # ENV Setup + Precheck
 source $OMARCHY_INSTALL/preflight/set-size-vars.sh
 source $OMARCHY_INSTALL/preflight/guard.sh # Need to be able to prompt
-source $OMARCHY_INSTALL/preflight/start-logs.sh
 
 clear_logo
 gum style --foreground 3 --padding "1 0 0 $PADDING_LEFT" "Installing Omarchy..."
-start_log_output
+start_install_log
 
 # Preparation
 run_logged $OMARCHY_INSTALL/preflight/show-env.sh
@@ -76,5 +74,5 @@ run_logged $OMARCHY_INSTALL/login/alt-bootloaders.sh
 
 # Post-install
 run_logged $OMARCHY_INSTALL/post-install/pacman.sh
-source $OMARCHY_INSTALL/post-install/stop-logs.sh
+stop_install_log
 source $OMARCHY_INSTALL/reboot.sh
