@@ -61,6 +61,11 @@ show_failed_script_or_command() {
   fi
 }
 
+# Save original stdout and stderr for trap to use
+save_original_outputs() {
+  exec 3>&1 4>&2
+}
+
 # Restore stdout and stderr to original (saved in FD 3 and 4)
 # This ensures output goes to screen, not log file
 restore_outputs() {
@@ -151,3 +156,6 @@ exit_handler() {
 # Set up traps
 trap catch_errors ERR INT TERM
 trap exit_handler EXIT
+
+# Save original outputs in case we trap
+save_original_outputs

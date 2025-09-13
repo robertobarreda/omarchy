@@ -8,9 +8,6 @@ export OMARCHY_INSTALL="$OMARCHY_PATH/install"
 export OMARCHY_INSTALL_LOG_FILE="/var/log/omarchy-install.log"
 export PATH="$OMARCHY_PATH/bin:$PATH"
 
-# Save original stdout and stderr for trap to use
-exec 3>&1 4>&2
-
 # Helpers
 source $OMARCHY_INSTALL/helpers/chroot.sh
 source $OMARCHY_INSTALL/helpers/logo.sh
