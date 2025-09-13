@@ -114,12 +114,6 @@ catch_errors() {
 
     # Add remaining options
     options+=("View full log")
-
-    # Add retry at the end if offline install
-    if [[ "${OMARCHY_INSTALL_MODE:-offline}" = "offline" ]]; then
-      options+=("Retry installation")
-    fi
-
     options+=("Exit")
 
     choice=$(gum choose "${options[@]}" --header "What would you like to do?" --height 6 --padding "1 $PADDING_LEFT")
