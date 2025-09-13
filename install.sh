@@ -3,6 +3,7 @@
 # Exit immediately if a command exits with a non-zero status
 set -eEo pipefail
 
+# Define Omarchy locations
 export OMARCHY_PATH="$HOME/.local/share/omarchy"
 export OMARCHY_INSTALL="$OMARCHY_PATH/install"
 export OMARCHY_INSTALL_LOG_FILE="/var/log/omarchy-install.log"
@@ -12,7 +13,7 @@ export PATH="$OMARCHY_PATH/bin:$PATH"
 source $OMARCHY_INSTALL/helpers/chroot.sh
 source $OMARCHY_INSTALL/helpers/logo.sh
 source $OMARCHY_INSTALL/helpers/gum.sh
-source $OMARCHY_INSTALL/helpers/trap-errors.sh
+source $OMARCHY_INSTALL/helpers/errors.sh
 source $OMARCHY_INSTALL/helpers/logging.sh
 
 # ENV Setup + Precheck
