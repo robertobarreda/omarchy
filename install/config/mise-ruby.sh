@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Install Ruby using gcc-14 for compatibility
 mise settings set ruby.ruby_build_opts "CC=gcc-14 CXX=g++-14"
 
