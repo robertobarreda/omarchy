@@ -27,11 +27,11 @@ cleanup() {
 
 # Display truncated log lines from the install log
 show_log_tail() {
-  local LOG_LINES=$(($TERM_HEIGHT - $LOGO_HEIGHT - 35))
-
-  if [ -n "${OMARCHY_INSTALL_LOG_FILE:-}" ] && [ -f "$OMARCHY_INSTALL_LOG_FILE" ]; then
+  if [[ -f "$OMARCHY_INSTALL_LOG_FILE" ]]; then
+    local log_lines=$(($TERM_HEIGHT - $LOGO_HEIGHT - 35))
     local max_line_width=$((LOGO_WIDTH - 4))
-    tail -n $LOG_LINES "$OMARCHY_INSTALL_LOG_FILE" | while IFS= read -r line; do
+
+    tail -n $log_lines "$OMARCHY_INSTALL_LOG_FILE" | while IFS= read -r line; do
       if [ ${#line} -gt $max_line_width ]; then
         local truncated_line="${line:0:$max_line_width}..."
       else
@@ -39,6 +39,7 @@ show_log_tail() {
       fi
       gum style "$truncated_line"
     done
+
     echo
   fi
 }
