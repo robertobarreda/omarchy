@@ -25,9 +25,7 @@ source $OMARCHY_INSTALL/preflight/guard.sh # Need to be able to prompt
 source $OMARCHY_INSTALL/preflight/start-logs.sh
 
 clear_logo
-
 gum style --foreground 3 --padding "1 0 0 $PADDING_LEFT" "Installing Omarchy..."
-
 start_log_output
 
 # Preparation
