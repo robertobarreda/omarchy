@@ -99,7 +99,6 @@ catch_errors() {
 
   # Offer options menu
   while true; do
-    # Build menu options
     options=()
 
     # If online install, show retry first
