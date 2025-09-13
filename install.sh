@@ -19,11 +19,8 @@ source $OMARCHY_INSTALL/helpers/logging.sh
 source $OMARCHY_INSTALL/preflight/set-size-vars.sh
 source $OMARCHY_INSTALL/preflight/guard.sh
 
-clear_logo
-gum style --foreground 3 --padding "1 0 0 $PADDING_LEFT" "Installing Omarchy..."
-start_install_log
-
 # Preparation
+source $OMARCHY_INSTALL/preflight/begin.sh
 run_logged $OMARCHY_INSTALL/preflight/show-env.sh
 run_logged $OMARCHY_INSTALL/preflight/pacman.sh
 run_logged $OMARCHY_INSTALL/preflight/migrations.sh
