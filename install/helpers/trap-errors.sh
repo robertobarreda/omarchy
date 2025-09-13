@@ -52,7 +52,8 @@ show_failed_script_or_command() {
     # Truncate long command lines to fit the display
     local cmd="$BASH_COMMAND"
     local max_cmd_width=$((LOGO_WIDTH - 4))
-    if [ ${#cmd} -gt $max_cmd_width ]; then
+
+    if ((${#cmd} > max_cmd_width)); then
       cmd="${cmd:0:$max_cmd_width}..."
     fi
     gum style "$cmd"
