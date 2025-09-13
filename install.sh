@@ -17,7 +17,7 @@ source $OMARCHY_INSTALL/helpers/logging.sh
 
 # ENV Setup + Precheck
 source $OMARCHY_INSTALL/preflight/set-size-vars.sh
-source $OMARCHY_INSTALL/preflight/guard.sh # Need to be able to prompt
+source $OMARCHY_INSTALL/preflight/guard.sh
 
 clear_logo
 gum style --foreground 3 --padding "1 0 0 $PADDING_LEFT" "Installing Omarchy..."
@@ -74,5 +74,4 @@ run_logged $OMARCHY_INSTALL/login/alt-bootloaders.sh
 
 # Post-install
 run_logged $OMARCHY_INSTALL/post-install/pacman.sh
-stop_install_log
-source $OMARCHY_INSTALL/reboot.sh
+source $OMARCHY_INSTALL/post-install/completion.sh

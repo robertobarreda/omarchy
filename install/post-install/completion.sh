@@ -1,5 +1,7 @@
 #!/bin/bash
 
+stop_install_log
+
 clear
 tte -i ~/.local/share/omarchy/logo.txt --canvas-width 0 --anchor-text c --frame-rate 920 laseretch
 echo
@@ -7,7 +9,7 @@ echo
 echo "You're done!" | tte --canvas-width 0 --anchor-text c --frame-rate 640 wipe
 
 # Display installation time if available
-if [ -f "$OMARCHY_INSTALL_LOG_FILE" ] && grep -q "Total:" "$OMARCHY_INSTALL_LOG_FILE" 2>/dev/null; then
+if [[ -f $OMARCHY_INSTALL_LOG_FILE ]] && grep -q "Total:" "$OMARCHY_INSTALL_LOG_FILE" 2>/dev/null; then
   echo
   echo
   TOTAL_TIME=$(tail -n 20 "$OMARCHY_INSTALL_LOG_FILE" | grep "^Total:" | sed 's/^Total:[[:space:]]*//')
