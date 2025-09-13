@@ -26,7 +26,7 @@ show_cursor() {
 
 # Display truncated log lines from the install log
 show_log_tail() {
-  if [[ -f "$OMARCHY_INSTALL_LOG_FILE" ]]; then
+  if [[ -f $OMARCHY_INSTALL_LOG_FILE ]]; then
     local log_lines=$(($TERM_HEIGHT - $LOGO_HEIGHT - 35))
     local max_line_width=$((LOGO_WIDTH - 4))
 
