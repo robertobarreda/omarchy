@@ -15,15 +15,15 @@ QR_CODE='
 █ ▀▀▀ █ ██  ▀ █▄█ ▄▄▄█▀ █
 ▀▀▀▀▀▀▀ ▀ ▀ ▀▀▀  ▀ ▀▀▀▀▀▀'
 
+# Track if we're already handling an error to prevent double-trapping
+ERROR_HANDLING=false
+
 # Cleanup function - always stop monitoring and restore cursor
 cleanup() {
   stop_log_output
   # Show cursor
   printf "\033[?25h"
 }
-
-# Track if we're already handling an error to prevent double-trapping
-ERROR_HANDLING=false
 
 # Display truncated log lines from the install log
 show_log_tail() {
