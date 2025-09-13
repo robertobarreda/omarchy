@@ -70,4 +70,4 @@ run_logged $OMARCHY_INSTALL/login/alt-bootloaders.sh
 
 # Post-install
 run_logged $OMARCHY_INSTALL/post-install/pacman.sh
-source $OMARCHY_INSTALL/post-install/completion.sh
+source $OMARCHY_INSTALL/post-install/finished.sh
