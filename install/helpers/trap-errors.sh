@@ -78,13 +78,12 @@ catch_errors() {
   # Store exit code immediately before it gets overwritten
   local exit_code=$?
 
-  local error_type="${1:-failed}"
   cleanup
   restore_outputs
 
   clear_logo
 
-  if [ "$error_type" = "interrupted" ]; then
+  if [[ $1 == "interrupted" ]]; then
     gum style --foreground 1 --padding "1 0 1 $PADDING_LEFT" "Omarchy installation interrupted!"
   else
     gum style --foreground 1 --padding "1 0 1 $PADDING_LEFT" "Omarchy installation failed!"
