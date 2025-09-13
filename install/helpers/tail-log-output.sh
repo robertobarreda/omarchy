@@ -9,8 +9,8 @@ start_log_output() {
   local ANSI_GRAY="\033[90m"
 
   # Save cursor position and hide cursor
-  printf "${ANSI_SAVE_CURSOR}"
-  printf "${ANSI_HIDE_CURSOR}"
+  printf $ANSI_SAVE_CURSOR
+  printf $ANSI_HIDE_CURSOR
 
   (
     local log_lines=20
