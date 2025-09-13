@@ -21,8 +21,7 @@ ERROR_HANDLING=false
 # Cleanup function - always stop monitoring and restore cursor
 cleanup() {
   stop_log_output
-  # Show cursor
-  printf "\033[?25h"
+  printf "\033[?25h" # Show cursor
 }
 
 # Display truncated log lines from the install log
