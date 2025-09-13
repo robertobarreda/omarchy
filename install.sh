@@ -15,12 +15,10 @@ source $OMARCHY_INSTALL/helpers/logo.sh
 source $OMARCHY_INSTALL/helpers/gum.sh
 source $OMARCHY_INSTALL/helpers/errors.sh
 source $OMARCHY_INSTALL/helpers/logging.sh
-
-# ENV Setup + Precheck
-source $OMARCHY_INSTALL/preflight/set-size-vars.sh
-source $OMARCHY_INSTALL/preflight/guard.sh
+source $OMARCHY_INSTALL/helpers/layout.sh
 
 # Preparation
+source $OMARCHY_INSTALL/preflight/guard.sh
 source $OMARCHY_INSTALL/preflight/begin.sh
 run_logged $OMARCHY_INSTALL/preflight/show-env.sh
 run_logged $OMARCHY_INSTALL/preflight/pacman.sh
