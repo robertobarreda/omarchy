@@ -46,7 +46,7 @@ show_log_tail() {
 
 # Display the failed command or script name
 show_failed_script_or_command() {
-  if [ -n "${CURRENT_SCRIPT:-}" ]; then
+  if [[ -n ${CURRENT_SCRIPT:-} ]]; then
     gum style "Failed script: $CURRENT_SCRIPT"
   else
     # Truncate long command lines to fit the display
@@ -102,7 +102,7 @@ catch_errors() {
     options=()
 
     # If online install, show retry first
-    if [[ "${OMARCHY_INSTALL_MODE:-offline}" = "online" ]]; then
+    if [[ ${OMARCHY_INSTALL_MODE:-offline} == "online" ]]; then
       options+=("Retry installation")
     fi
 
