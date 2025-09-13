@@ -36,6 +36,7 @@ show_log_tail() {
       else
         local truncated_line="$line"
       fi
+
       gum style "$truncated_line"
     done
 
@@ -55,6 +56,7 @@ show_failed_script_or_command() {
     if ((${#cmd} > max_cmd_width)); then
       cmd="${cmd:0:$max_cmd_width}..."
     fi
+
     gum style "$cmd"
   fi
 }
@@ -89,7 +91,6 @@ catch_errors() {
   show_log_tail
 
   gum style "This command halted with exit code $exit_code:"
-
   show_failed_script_or_command
 
   gum style "$QR_CODE"
