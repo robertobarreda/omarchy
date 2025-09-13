@@ -1,5 +1,3 @@
-#!/bin/bash
-
 ICON_DIR="$HOME/.local/share/applications/icons"
 
 omarchy-webapp-install "HEY" https://app.hey.com "$ICON_DIR/HEY.png"

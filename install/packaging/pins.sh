@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # We pin explicit packages that are bad upstream here
 pinned_packages=$(omarchy-pkg-pinned)
 

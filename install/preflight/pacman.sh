@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Only run if running an online install
 if [ "${OMARCHY_INSTALL_MODE:-offline}" = "online" ]; then
   # Install build tools

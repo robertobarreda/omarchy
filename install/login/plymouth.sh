@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Hyprland launched via UWSM and login directly as user, rely on disk encryption + hyprlock for security
 
 # ==============================================================================

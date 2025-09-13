@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Directs user to Omarchy Discord
 QR_CODE='
 █▀▀▀▀▀█ ▄ ▄ ▀▄▄▄█ █▀▀▀▀▀█

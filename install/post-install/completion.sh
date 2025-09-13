@@ -1,5 +1,3 @@
-#!/bin/bash
-
 stop_install_log
 
 clear

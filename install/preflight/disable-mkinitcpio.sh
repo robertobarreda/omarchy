@@ -1,5 +1,3 @@
-#!/bin/bash
-
 # Temporarily disable mkinitcpio hooks to prevent multiple regenerations during package installation
 # This speeds up installation significantly
 
@@ -15,3 +13,4 @@ if [ -f /usr/share/libalpm/hooks/60-mkinitcpio-remove.hook ]; then
 fi
 
 echo "mkinitcpio hooks disabled"
+
