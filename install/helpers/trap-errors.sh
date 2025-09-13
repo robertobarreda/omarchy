@@ -83,11 +83,7 @@ catch_errors() {
 
   clear_logo
 
-  if [[ $1 == "interrupted" ]]; then
-    gum style --foreground 1 --padding "1 0 1 $PADDING_LEFT" "Omarchy installation interrupted!"
-  else
-    gum style --foreground 1 --padding "1 0 1 $PADDING_LEFT" "Omarchy installation failed!"
-  fi
+  gum style --foreground 1 --padding "1 0 1 $PADDING_LEFT" "Omarchy installation stopped!"
 
   show_log_tail
 
@@ -144,11 +140,6 @@ catch_errors() {
   done
 }
 
-# Interrupt handler
-interrupt() {
-  catch_errors "interrupted"
-}
-
 # Exit handler - ensures cleanup happens on any exit
 exit_handler() {
   local exit_code=$?
@@ -163,6 +154,5 @@ exit_handler() {
 }
 
 # Set up traps
-trap catch_errors ERR
+trap catch_errors ERR INT TERM
 trap exit_handler EXIT
-trap interrupt INT TERM
