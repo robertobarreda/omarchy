@@ -58,9 +58,9 @@ show_failed_script_or_command() {
   fi
 }
 
+# Restore stdout and stderr to original (saved in FD 3 and 4)
+# This ensures output goes to screen, not log file
 restore_outputs() {
-  # Restore stdout and stderr to original (saved in FD 3 and 4)
-  # This ensures output goes to screen, not log file
   if [ -e /proc/self/fd/3 ] && [ -e /proc/self/fd/4 ]; then
     exec 1>&3 2>&4
   fi
