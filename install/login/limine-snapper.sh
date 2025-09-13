@@ -18,7 +18,7 @@ EOF
   fi
 
   # Double-check and exit if we don't have a config file for some reason
-  if [[ ! -f "$limine_config" ]]; then
+  if [[ ! -f $limine_config ]]; then
     echo "Error: Limine config not found at $limine_config" >&2
     exit 1
   fi
@@ -78,7 +78,7 @@ EOF
   sudo pacman -S --noconfirm --needed limine-snapper-sync limine-mkinitcpio-hook
 
   # Match Snapper configs if not installing from the ISO
-  if [ -z "${OMARCHY_CHROOT_INSTALL:-}" ]; then
+  if [[ -z ${OMARCHY_CHROOT_INSTALL:-} ]]; then
     if ! sudo snapper list-configs 2>/dev/null | grep -q "root"; then
       sudo snapper -c root create-config /
     fi
@@ -97,7 +97,7 @@ EOF
 fi
 
 # Add UKI entry to UEFI machines to skip bootloader showing on normal boot
-if [ -n "$EFI" ] && efibootmgr &>/dev/null && ! efibootmgr | grep -q Omarchy &&
+if [[ -n $EFI ]] && efibootmgr &>/dev/null && ! efibootmgr | grep -q Omarchy &&
   ! cat /sys/class/dmi/id/bios_vendor 2>/dev/null | grep -qi "American Megatrends"; then
   sudo efibootmgr --create \
     --disk "$(findmnt -n -o SOURCE /boot | sed 's/p\?[0-9]*$//')" \
