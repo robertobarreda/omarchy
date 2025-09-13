@@ -32,7 +32,7 @@ show_log_tail() {
     local max_line_width=$((LOGO_WIDTH - 4))
 
     tail -n $log_lines "$OMARCHY_INSTALL_LOG_FILE" | while IFS= read -r line; do
-      if [ ${#line} -gt $max_line_width ]; then
+      if ((${#line} > max_line_width)); then
         local truncated_line="${line:0:$max_line_width}..."
       else
         local truncated_line="$line"
