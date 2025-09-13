@@ -19,10 +19,9 @@ QR_CODE='
 # Track if we're already handling an error to prevent double-trapping
 ERROR_HANDLING=false
 
-# Cleanup function - always stop monitoring and restore cursor
-cleanup() {
-  stop_log_output
-  printf "\033[?25h" # Show cursor
+# Cursor is usually hidden while we install
+show_cursor() {
+  printf "\033[?25h"
 }
 
 # Display truncated log lines from the install log
@@ -80,13 +79,13 @@ catch_errors() {
   # Store exit code immediately before it gets overwritten
   local exit_code=$?
 
-  cleanup
+  stop_log_output
   restore_outputs
 
   clear_logo
+  show_cursor
 
   gum style --foreground 1 --padding "1 0 1 $PADDING_LEFT" "Omarchy installation stopped!"
-
   show_log_tail
 
   gum style "This command halted with exit code $exit_code:"
@@ -150,8 +149,8 @@ exit_handler() {
   if [[ $exit_code -ne 0 && $ERROR_HANDLING != true ]]; then
     catch_errors
   else
-    # Still need to clean up even on successful exit
-    cleanup
+    stop_log_output
+    show_cursor
   fi
 }
 
