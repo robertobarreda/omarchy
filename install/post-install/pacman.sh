@@ -6,7 +6,7 @@ if lspci -nn | grep -q "106b:180[12]"; then
   cat <<EOF | sudo tee -a /etc/pacman.conf >/dev/null
 
 [arch-mact2]
-Server = https://mirror.omarchy.org/\$repo/\$arch
+Server = https://mirror.funami.tech/arch-mact2/os/x86_64
 SigLevel = Never
 EOF
 fi
