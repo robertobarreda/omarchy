@@ -1,13 +1,9 @@
 echo "Create ~/Work with ./bin in the path for contained projects"
-mkdir -p "$HOME/Work"
 
-if [ -f "$HOME/Work/.mise.toml" ]; then
-  cp "$HOME/Work/.mise.toml" "$HOME/Work/.mise.toml.bak.$(date +%s)"
+mise_config="$HOME/Work/.mise.toml"
+
+if [[ -f $mise_config ]]; then
+  cp $mise_config "$mise_config.bak.$(date +%s)"
 fi
 
-cat >"$HOME/Work/.mise.toml" <<'EOF'
-[env]
-_.path = "{{ cwd }}/bin"
-EOF
-
-mise trust ~/Work/.mise.toml
+source "$OMARCHY_PATH/install/config/mise-work.sh"
